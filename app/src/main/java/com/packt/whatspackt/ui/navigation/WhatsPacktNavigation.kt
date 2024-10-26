@@ -16,10 +16,10 @@ import com.packt.framework.navigation.NavRoutes
 fun MainNavigation(navController: NavHostController) {
 
 
-    NavHost(navController = navController, startDestination = NavRoutes.ConversationsList) {
+    NavHost(navController = navController, startDestination = "chat/5 ") {
 
-        addConversationList(navController)
-        addNewConversation(navController)
+//        addConversationList(navController)
+//        addNewConversation(navController)
         addChat(navController)
     }
 }
@@ -58,7 +58,7 @@ private fun NavGraphBuilder.addChat(navController: NavHostController) {
 
         val chatId = backStackEntry.arguments?.getString(NavRoutes.ChatArgs.ChatId)
 
-        ChatScreen(chatId, onBack = {
+        ChatScreen(chatId = "5", onBack = {
             navController.popBackStack()
         })
     }

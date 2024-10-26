@@ -22,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.packt.whatspackt.R
 import model.Conversation
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -40,7 +39,7 @@ fun ConversationListScreen(
     Scaffold(topBar = {
 
         TopAppBar(title = {
-            Text(text = stringResource(R.string.conversation_list_title))
+            Text(text = stringResource(com.packt.whatspackt.common.framework.R.string.conversation_list_title))
         },
             actions = {
                 IconButton(onClick = {}) {

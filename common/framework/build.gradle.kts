@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.packt.whatspackt"
+    namespace = "com.packt.whatspackt.common.framework"
     compileSdk = 34
 
     defaultConfig {

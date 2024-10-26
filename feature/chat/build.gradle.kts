@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.packt.whatspackt"
+    namespace = "com.packt.whatspackt.feature.chat"
     compileSdk = 34
 
     defaultConfig {
@@ -51,6 +51,16 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.coil.compose)
+    implementation(libs.ktor.server.websockets)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.javax.inject)
+    implementation(libs.ktor.ktor.serialization.kotlinx.json)
+
+
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

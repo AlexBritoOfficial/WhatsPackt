@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.packt.whatspackt"
+    namespace = "com.packt.whatspackt.feature.conversations"
     compileSdk = 34
 
     defaultConfig {
