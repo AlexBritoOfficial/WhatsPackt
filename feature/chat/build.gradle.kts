@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -56,6 +57,12 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.javax.inject)
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
+    implementation(libs.hilt.android.v244)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+
+
 
 
 

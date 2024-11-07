@@ -1,4 +1,4 @@
-package com.packt.chat.data.network
+package com.packt.chat.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
