@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class WebsocketMessageModel(
-    val id: String,
+    val id: String?,
     val message: String,
     val senderName: String,
     val senderAvatar: String,
-    val timestamp: String,
+    val timestamp: String?,
     val isMine: Boolean,
     val messageType: String,
     val messageDescription: String
@@ -18,6 +18,7 @@ class WebsocketMessageModel(
         const val TYPE_TEXT = "TEXT"
         const val TYPE_IMAGE = "IMAGE"
 
+        // Takes the current Message from the Domain layer anc converts it into a WebsocketMessageModel
         fun fromDomain(message: Message): WebsocketMessageModel {
             return WebsocketMessageModel(
                 id = message.id,
@@ -32,6 +33,7 @@ class WebsocketMessageModel(
         }
     }
 
+    // Converts the WebSocketMessage Model into a Message object within the domain layer
     fun toDomain(): Message {
         return Message(
             id = id,

@@ -62,7 +62,7 @@ fun ChatScreen(
                 viewModel.onSendMessage(it)
             }
         }) { paddingValues ->
-        ListOfMessage(paddingValues = paddingValues)
+        ListOfMessage(messages = getFakeMessages(),paddingValues = paddingValues)
     }
 
 }
@@ -129,4 +129,90 @@ fun ListOfMessage(messages: List<Message>, paddingValues: PaddingValues) {
             }
         }
     }
+}
+
+
+fun getFakeMessages(): List<Message> {
+    return listOf(
+        Message(
+            id = "1",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:00",
+            messageContent = MessageContent.TextMessage(
+                message = "Hi, how are you?"
+            )
+        ),
+        Message(
+            id = "2",
+            senderName = "Lucy",
+            senderAvatar = "https://i.pravatar.cc/300?img=2",
+            isMine = true,
+            timestamp = "10:01",
+            messageContent = MessageContent.TextMessage(
+                message = "I'm good, thank you! And you?"
+            )
+        ),
+        Message(
+            id = "3",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:02",
+            messageContent = MessageContent.TextMessage(
+                message = "Super fine!"
+            )
+        ),
+        Message(
+            id = "4",
+            senderName = "Lucy",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = true,
+            timestamp = "10:02",
+            messageContent = MessageContent.TextMessage(
+                message = "Are you going to the Kotlin conference?"
+            )
+        ),
+        Message(
+            id = "5",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:03",
+            messageContent = MessageContent.TextMessage(
+                message = "Of course! I hope to see you there!"
+            )
+        ),
+        Message(
+            id = "5",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:03",
+            messageContent = MessageContent.TextMessage(
+                message = "I'm going to arrive pretty early"
+            )
+        ),
+        Message(
+            id = "5",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:03",
+            messageContent = MessageContent.TextMessage(
+                message = "So maybe we can have a coffee together"
+            )
+        ),
+        Message(
+            id = "5",
+            senderName = "Alice",
+            senderAvatar = "https://i.pravatar.cc/300?img=1",
+            isMine = false,
+            timestamp = "10:03",
+            messageContent = MessageContent.TextMessage(
+                message = "Wdyt?"
+            )
+        ),
+    )
 }

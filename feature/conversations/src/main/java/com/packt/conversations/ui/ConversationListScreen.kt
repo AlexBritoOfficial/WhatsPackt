@@ -18,10 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import model.Conversation
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -32,7 +34,7 @@ fun ConversationListScreen(
 ) {
 
     val tabs = generateTabs()
-    val selectedIndex = remember { mutableStateOf(1) }
+    val selectedIndex by remember { mutableStateOf(1) }
     val pagerState =
         rememberPagerState(initialPage = 1, initialPageOffsetFraction = 0f, pageCount = { 3 })
 
@@ -81,8 +83,8 @@ fun ConversationListScreen(
                 }
             }
 
-            LaunchedEffect(selectedIndex.value) {
-                pagerState.animateScrollToPage(selectedIndex.value)
+            LaunchedEffect(selectedIndex) {
+                pagerState.animateScrollToPage(selectedIndex)
             }
         },
         floatingActionButton = {
@@ -183,4 +185,11 @@ fun generateFakeConversations(): List<Conversation> {
             avatar = "https://i.pravatar.cc/150?u=11"
         )
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversationListScreenPreview(){
+    ConversationListScreen(onNewConversationClick = {},
+        onConversationClick = {string -> })
 }

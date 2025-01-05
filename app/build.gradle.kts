@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     buildToolsVersion = "34.0.0"
 }
@@ -70,8 +71,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Hilt
-    implementation(libs.hilt.android.v2511)
-    kapt(libs.hilt.android.compiler)
+    val hilt = "2.45"
+    implementation("com.google.dagger:hilt-android:$hilt")
+    runtimeOnly("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt")
 
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)

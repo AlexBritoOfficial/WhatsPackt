@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
 
@@ -36,6 +37,10 @@ android {
         compose = true
     }
     buildToolsVersion = "34.0.0"
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4"
+    }
 }
 
 dependencies {
@@ -57,17 +62,12 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.javax.inject)
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
-    implementation(libs.hilt.android.v244)
-    kapt(libs.hilt.compiler)
+    implementation ("com.google.dagger:hilt-android:2.44")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    annotationProcessor ("com.google.dagger:hilt-compiler:2.44")
+
     implementation(libs.androidx.hilt.navigation.compose)
-
-
-
-
-
-
-
-
+    implementation(libs.ktor.client.content.negotiation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

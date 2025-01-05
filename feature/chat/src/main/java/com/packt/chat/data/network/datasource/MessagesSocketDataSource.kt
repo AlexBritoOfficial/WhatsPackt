@@ -25,6 +25,15 @@ import kotlinx.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
+/**
+ * What are the steps that are needed for us to create a WebSocket component in Android.
+ *
+ * 1) We need to create a HTTPClient component for us to manage the facilitation of the
+ *    the socket
+ *
+ *
+ * ***/
+
 class MessagesSocketDataSource @Inject constructor(
     @Named(WEBSOCKET_CLIENT) private val httpClient: HttpClient,
     @Named(WEBSOCKET_URL_NAME) private val webSocketUrl: String
@@ -86,6 +95,9 @@ class MessagesSocketDataSource @Inject constructor(
         webSocketSession.close(CloseReason(CloseReason.Codes.NORMAL, "Disconnect"))
     }
 
+    /**
+     * Takes the incoming Frame object that is coming through the socket and deserializes it into a WebSocketMessageModel object
+     **/
     private suspend fun DefaultClientWebSocketSession.handleMessage(frame: Frame): WebsocketMessageModel? {
         return when (frame) {
             is Frame.Text -> converter?.deserialize(frame)
