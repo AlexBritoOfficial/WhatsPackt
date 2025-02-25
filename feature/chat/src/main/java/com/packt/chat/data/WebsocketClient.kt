@@ -16,7 +16,9 @@ object WebsocketClient {
             contentConverter = KotlinxWebsocketSerializationConverter(Json)
         }
     }
+
 }
+
 
 object RestClient {
 

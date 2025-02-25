@@ -1,6 +1,7 @@
 package com.packt.chat.data.network.datasource
 
 import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
 import com.packt.chat.data.model.WebsocketMessageModel
 import com.packt.chat.di.ChatModule.Companion.WEBSOCKET_CLIENT
 import com.packt.chat.di.ChatModule.Companion.WEBSOCKET_URL_NAME
@@ -15,6 +16,7 @@ import io.ktor.serialization.serialize
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -47,15 +49,16 @@ class MessagesSocketDataSource @Inject constructor(
         val RETRY_DELAY = 1000L
     }
 
+
     suspend fun connect(): Flow<Message> {
 
         return flow {
 
             try {
-                httpClient.webSocketSession { url(webSocketUrl) }
-                    .apply { webSocketSession = this }
-                    .incoming
-                    .receiveAsFlow()
+                httpClient.webSocketSession { url(webSocketUrl) } // This line will return a DefaultClientWebSocketSession
+                    .apply { webSocketSession = this } // We use the scope function 'apply' to assign to our webSocketSession: DefaultClientWebSocketSession
+                    .incoming // The incoming property of DefaultClientWebSocketSession, a channel that receives Frame objects
+                    .receiveAsFlow() // Receive the incoming messages as a Flow object
                     .collect { frame ->
                         try {
                             // Handle errors while processing the message
@@ -96,6 +99,7 @@ class MessagesSocketDataSource @Inject constructor(
     }
 
     /**
+     * Responsible for handling and processing the messages
      * Takes the incoming Frame object that is coming through the socket and deserializes it into a WebSocketMessageModel object
      **/
     private suspend fun DefaultClientWebSocketSession.handleMessage(frame: Frame): WebsocketMessageModel? {

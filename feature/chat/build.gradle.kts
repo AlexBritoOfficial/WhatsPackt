@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.javax.inject)
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
 
     implementation (libs.hilt.android.v255)
     implementation (libs.androidx.hilt.navigation.compose.v100)

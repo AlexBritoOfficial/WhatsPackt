@@ -14,7 +14,7 @@ import javax.inject.Named
 class ChatModule {
 
     companion object{
-        const val WEBSOCKET_URL = "ws://whatspackt.com/chat/%s"
+        const val WEBSOCKET_URL = "ws://localhost:8080/echo"
         const val WEBSOCKET_CLIENT = "WEBSOCKET_CLIENT"
         const val WEBSOCKET_URL_NAME = "WEBSOCKET_URL"
     }
