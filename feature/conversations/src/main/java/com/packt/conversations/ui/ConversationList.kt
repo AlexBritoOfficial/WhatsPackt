@@ -20,12 +20,10 @@ fun ConversationList(
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    onConversationClick(conversation.id)
+                    onConversationClick("1")
                 }) {
                 ConversationItem(conversation = conversation)
             }
         }
-
-
     }
 }

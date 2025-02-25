@@ -23,6 +23,7 @@ fun MainNavigation(navController: NavHostController) {
         addConversationList(navController)
         addNewConversation(navController)
         addChat(navController)
+
     }
 }
 
@@ -58,7 +59,7 @@ private fun NavGraphBuilder.addChat(navController: NavHostController) {
 
         val chatId = backStackEntry.arguments?.getString(NavRoutes.ChatArgs.ChatId)
 
-        ChatScreen(chatId = chatId, onBack = {
+        ChatScreen(chatId = "1", onBack = {
             navController.popBackStack()
         })
     }

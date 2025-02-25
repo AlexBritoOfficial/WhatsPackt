@@ -2,12 +2,15 @@ package com.packt.chat.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,25 +47,34 @@ fun ChatScreen(
 ) {
 
     LaunchedEffect(Unit) {
-        viewModel.loadChatInformation("")
+        viewModel.loadChatInformation(chatId.orEmpty())
     }
 
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(
                 stringResource(
-                    com.packt.whatspackt.common.framework.R.string.chat_title,
-                    "Alice"
+                    com.packt.whatspackt.common.framework.R.string.chat_title, "Alice"
                 )
             )
         })
     },
         bottomBar = {
-            SendMessageBox {
-                viewModel.onSendMessage(it)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .navigationBarsPadding()
+            ) {
+                SendMessageBox {
+                    viewModel.onSendMessage(it)
+                }
             }
         }) { paddingValues ->
-        ListOfMessage(messages = getFakeMessages(),paddingValues = paddingValues)
+
+        ListOfMessage(messages = getFakeMessages(), paddingValues = paddingValues)
+
     }
 
 }

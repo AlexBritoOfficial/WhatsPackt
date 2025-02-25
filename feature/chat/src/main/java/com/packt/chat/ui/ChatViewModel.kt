@@ -42,8 +42,7 @@ class ChatViewModel @Inject constructor(
 
     private var messageCollectionJob: Job? = null
 
-
-    fun loadChatInformation(chatId: String) {
+    fun loadChatInformation(chatId: String?) {
 
     }
 

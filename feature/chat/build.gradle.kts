@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -62,11 +62,11 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.javax.inject)
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
-    implementation ("com.google.dagger:hilt-android:2.44")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-    annotationProcessor ("com.google.dagger:hilt-compiler:2.44")
 
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation (libs.hilt.android.v255)
+    implementation (libs.androidx.hilt.navigation.compose.v100)
+    kapt (libs.hilt.compiler.v254)
+
     implementation(libs.ktor.client.content.negotiation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

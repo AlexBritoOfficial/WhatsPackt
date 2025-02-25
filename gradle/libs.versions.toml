@@ -5,9 +5,14 @@ agp = "8.7.0"
 coil = "2.7.0"
 googleAccompanistPager = "0.36.0"
 googleHiltAndroid = "2.44"
+googleHiltAndroidVersion = "2.55"
+hilt = "2.45"
 hiltAndroid = "2.52"
+hiltAndroidCompiler = "2.45"
 hiltAndroidVersion = "2.51.1"
+hiltCompiler = "2.54"
 hiltNavigationCompose = "1.2.0"
+hiltNavigationComposeVersion = "1.0.0"
 javaxInject = "1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -34,14 +39,19 @@ accompanist-pager-v0301 = { module = "com.google.accompanist:accompanist-pager",
 accompanist-pager-v0360 = { module = "com.google.accompanist:accompanist-pager", version.ref = "googleAccompanistPager" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-hilt-navigation-compose-v100 = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidVersion" }
+hilt-android-compiler-v245 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android-v244 = { module = "com.google.dagger:hilt-android", version.ref = "googleHiltAndroid" }
+hilt-android-v245 = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-v2511 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
+hilt-android-v255 = { module = "com.google.dagger:hilt-android", version.ref = "googleHiltAndroidVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "googleHiltAndroid" }
+hilt-compiler-v254 = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

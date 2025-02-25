@@ -38,17 +38,18 @@ fun ConversationListScreen(
     val pagerState =
         rememberPagerState(initialPage = 1, initialPageOffsetFraction = 0f, pageCount = { 3 })
 
-    Scaffold(topBar = {
+    Scaffold(
+        topBar = {
 
-        TopAppBar(title = {
-            Text(text = stringResource(com.packt.whatspackt.common.framework.R.string.conversation_list_title))
+            TopAppBar(title = {
+                Text(text = stringResource(com.packt.whatspackt.common.framework.R.string.conversation_list_title))
+            },
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    }
+                })
         },
-            actions = {
-                IconButton(onClick = {}) {
-                    Icon(Icons.Default.Menu, contentDescription = "Menu")
-                }
-            })
-    },
         bottomBar = {
             TabRow(selectedTabIndex = 1) {
                 tabs.forEachIndexed { index, tab ->
@@ -58,7 +59,6 @@ fun ConversationListScreen(
                 }
             }
         },
-
         content = { innerPadding ->
             HorizontalPager(
                 modifier = Modifier.padding(innerPadding),
@@ -189,7 +189,7 @@ fun generateFakeConversations(): List<Conversation> {
 
 @Preview(showBackground = true)
 @Composable
-fun ConversationListScreenPreview(){
+fun ConversationListScreenPreview() {
     ConversationListScreen(onNewConversationClick = {},
-        onConversationClick = {string -> })
+        onConversationClick = { string -> })
 }

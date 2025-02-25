@@ -30,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -71,10 +71,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Hilt
-    val hilt = "2.45"
-    implementation("com.google.dagger:hilt-android:$hilt")
-    runtimeOnly("androidx.hilt:hilt-navigation-compose:1.2.0")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt")
+    implementation (libs.hilt.android.v255)
+    implementation (libs.androidx.hilt.navigation.compose.v100)
+    kapt (libs.hilt.compiler.v254)
 
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)

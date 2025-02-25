@@ -47,57 +47,59 @@ fun MessageItem(message: Message) {
         }
 
         Spacer(modifier = Modifier.width(8.dp))
-    }
 
-    Column {
-        if (message.isMine) {
-            Spacer(modifier = Modifier.height(8.dp))
-        } else {
-            Text(
-                text = message.senderName,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        when (val content = message.messageContent) {
-
-            is MessageContent.TextMessage -> {
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = if (message.isMine) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.secondary
-                    }
-                ) {
-                    Text(
-                        text = content.message,
-                        modifier = Modifier.padding(8.dp),
-                        color = if (message.isMine) {
-                            MaterialTheme.colorScheme.onPrimary
-                        } else {
-                            Color.White
-                        }
-                    )
-                }
-            }
-
-            is MessageContent.ImageMessage -> {
-                AsyncImage(
-                    model = content.imageUrl,
-                    contentDescription = content.contentDescription,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+        Column {
+            if (message.isMine) {
+                Spacer(modifier = Modifier.height(8.dp))
+            } else {
+                Text(
+                    text = message.senderName,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
+            when (val content = message.messageContent) {
+
+                is MessageContent.TextMessage -> {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (message.isMine) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.secondary
+                        }
+                    ) {
+                        Text(
+                            text = content.message,
+                            modifier = Modifier.padding(8.dp),
+                            color = if (message.isMine) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                Color.White
+                            }
+                        )
+                    }
+                }
+
+                is MessageContent.ImageMessage -> {
+                    AsyncImage(
+                        model = content.imageUrl,
+                        contentDescription = content.contentDescription,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+            }
+
+            Text(
+                text = message.timestamp,
+                fontSize = 12.sp
+            )
         }
 
-        Text(
-            text = message.timestamp,
-            fontSize = 12.sp
-        )
     }
+
 }
