@@ -8,8 +8,10 @@ import com.packt.chat.domain.usecases.DisconnectMessages
 import com.packt.chat.domain.usecases.GetInitialChatRoomInformation
 import com.packt.chat.domain.usecases.RetrieveMessages
 import com.packt.chat.domain.usecases.SendMessage
+import com.packt.chat.ui.model.Chat
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
+import com.packt.chat.ui.model.toUI
 import com.packt.chat.domain.models.Message as DomainMessage
 import com.packt.domain.user.GetUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,30 +40,65 @@ class ChatViewModel @Inject constructor(
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     val messages: StateFlow<List<Message>> = _messages
 
-    private lateinit var chatRoom: ChatRoom
+    private val _uiState = MutableStateFlow(Chat())
+    val uiState: StateFlow<Chat> = _uiState
 
     private var messageCollectionJob: Job? = null
 
-    fun loadChatInformation(chatId: String?) {
+    private lateinit var chatRoom: ChatRoom
 
+    // Load Chat Information from API
+    fun loadChatInformation(chatId: String) {
+        messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                chatRoom = getInitialChatRoomInformation(chatId)
+                withContext(Dispatchers.Main) {
+                    _uiState.value = chatRoom.toUI()
+                    _messages.value = chatRoom.lastMessages.map { it.toUi() }
+                    updateMessages()
+                }
+            } catch (ie: Throwable) {
+                Log.d("TODO", "You can show here a message to the user indicating that an error has happened")
+
+            }
+        }
     }
 
     fun updateMessages() {
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
-
-            try {
-                retrieveMessages(chatId = chatRoom.id, userId = getUserData.getData().id).map {
-                    it.toUi()
-                }.collect { message ->
-                    withContext(Dispatchers.Main) {
-                        _messages.value += message
+            try{
+                retrieveMessages(userId = getUserData.getData().id, chatId = chatRoom.id)
+                    .map { it.toUi() }
+                    .collect { message ->
+                        withContext(Dispatchers.Main) {
+                            _messages.value += message
+                        }
                     }
-                }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading messages from chat room", e)
+            } catch (ie: Throwable) {
+                Log.d("TODO", "You can show here a message to the user indicating that an error has happened")
             }
+        }
+    }
+    fun onSendMessage(messageText: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = getUserData.getData()
 
+            val message = DomainMessage(
+                senderName = user.name,
+                senderAvatar = user.avatar,
+                isMine = true,
+                contentType = DomainMessage.ContentType.TEXT,
+                content = messageText,
+                contentDescription = messageText
+            )
+            sendMessage(chatId = "1", message)
+        }
+    }
+
+    override fun onCleared() {
+        messageCollectionJob?.cancel()
+        viewModelScope.launch(Dispatchers.IO) {
+            disconnectMessages()
         }
     }
 
@@ -75,30 +112,6 @@ class ChatViewModel @Inject constructor(
             messageContent = getMessageContent()
         )
     }
-
-    fun onSendMessage(messageText: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val user = getUserData.getData()
-
-            val message = DomainMessage(
-                senderName = user.name,
-                senderAvatar = user.avatar,
-                isMine = true,
-                contentType = DomainMessage.ContentType.TEXT,
-                content = messageText,
-                contentDescription = messageText
-            )
-            sendMessage(chatId = "1",  message)
-        }
-    }
-
-    override fun onCleared() {
-        messageCollectionJob?.cancel()
-        viewModelScope.launch(Dispatchers.IO) {
-            disconnectMessages()
-        }
-    }
-
 
     private fun DomainMessage.getMessageContent(): MessageContent {
         return when (contentType) {

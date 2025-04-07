@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
+import kotlinx.coroutines.flow.toList
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +48,7 @@ fun ChatScreen(
 ) {
 
     LaunchedEffect(Unit) {
+        viewModel.loadAndUpdateMessages()
         viewModel.loadChatInformation(chatId.orEmpty())
     }
 
@@ -73,7 +75,7 @@ fun ChatScreen(
             }
         }) { paddingValues ->
 
-        ListOfMessage(messages = getFakeMessages(), paddingValues = paddingValues)
+        ListOfMessage(messages = viewModel.messages, paddingValues = paddingValues)
 
     }
 

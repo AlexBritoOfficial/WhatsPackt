@@ -8,7 +8,6 @@ import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-
 object WebsocketClient {
 
     val client = HttpClient(OkHttp){
@@ -18,7 +17,6 @@ object WebsocketClient {
     }
 
 }
-
 
 object RestClient {
 

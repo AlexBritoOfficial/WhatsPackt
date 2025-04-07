@@ -77,4 +77,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // https://mvnrepository.com/artifact/io.ktor/ktor-client-content-negotiation
+    implementation(libs.ktor.client.content.negotiation.v312)
 }

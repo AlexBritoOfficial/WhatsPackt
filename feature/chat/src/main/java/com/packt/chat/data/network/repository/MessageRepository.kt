@@ -6,17 +6,17 @@ import com.packt.chat.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class MessageRepository @Inject constructor(private val dataSource: MessagesSocketDataSource): IMessageRepository {
+class MessageRepository @Inject constructor(private val dataSource: MessagesSocketDataSource,): IMessageRepository {
 
     override suspend fun getMessages(chatId: String, userId: String): Flow<Message> {
-       return dataSource.connect()
+        return dataSource.connect()
     }
 
     override suspend fun sendMessage(chatId: String, message: Message) {
-        return dataSource.sendMessage(message)
+        dataSource.sendMessage(message)
     }
 
-    override suspend fun disconnect(){
-        dataSource.disconnect()
+    override suspend fun disconnect() {
     }
+
 }
