@@ -36,6 +36,7 @@ import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
 import kotlinx.coroutines.flow.toList
@@ -47,8 +48,10 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(), chatId: String?, onBack: () -> Unit
 ) {
 
+    val messages by viewModel.messages.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
-        viewModel.loadAndUpdateMessages()
         viewModel.loadChatInformation(chatId.orEmpty())
     }
 
@@ -56,7 +59,8 @@ fun ChatScreen(
         TopAppBar(title = {
             Text(
                 stringResource(
-                    com.packt.whatspackt.common.framework.R.string.chat_title, "Alice"
+                    com.packt.whatspackt.common.framework.R.string.chat_title,
+                    uiState.name.orEmpty()
                 )
             )
         })

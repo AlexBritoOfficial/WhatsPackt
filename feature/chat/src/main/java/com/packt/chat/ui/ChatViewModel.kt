@@ -79,6 +79,7 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
+
     fun onSendMessage(messageText: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = getUserData.getData()

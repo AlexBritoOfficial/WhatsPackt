@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358379693369",
+    "project_id": "whatspackt-14428",
+    "storage_bucket": "whatspackt-14428.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358379693369:android:2b08a1aac9d27488f374e8",
+        "android_client_info": {
+          "package_name": "com.packt.whatspackt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyxYJBk8azc1dB27ToYr0wuaRdMEbrECc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

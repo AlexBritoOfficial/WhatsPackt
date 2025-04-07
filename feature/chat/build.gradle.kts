@@ -67,6 +67,7 @@ dependencies {
 
     implementation (libs.hilt.android.v255)
     implementation (libs.androidx.hilt.navigation.compose.v100)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
     kapt (libs.hilt.compiler.v254)
 
     implementation(libs.ktor.client.content.negotiation)
