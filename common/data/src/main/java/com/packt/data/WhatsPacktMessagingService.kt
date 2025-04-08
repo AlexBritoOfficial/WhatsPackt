@@ -39,7 +39,7 @@ class WhatsPacktMessagingService : FirebaseMessagingService() {
 
     private fun showNotification(senderName: String?, messageId: String, messageContent: String?, chatId: String){
 
-        val notiticationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Create the notification channel
         // To support versions lower than Android Oreo, check the API level here
@@ -48,7 +48,7 @@ class WhatsPacktMessagingService : FirebaseMessagingService() {
             description = CHANNEL_TITLE
         }
 
-        notiticationManager.createNotificationChannel(notificationChannel)
+        notificationManager.createNotificationChannel(notificationChannel)
 
         // Create an Intent that will be responsible for opening the chat when the notification is clicked.
 
@@ -72,6 +72,6 @@ class WhatsPacktMessagingService : FirebaseMessagingService() {
             .build()
 
         // Show the notification
-        notiticationManager.notify(messageId.toInt(), notification)
+        notificationManager.notify(messageId.toInt(), notification)
     }
 }

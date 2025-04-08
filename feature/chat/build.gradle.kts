@@ -68,6 +68,8 @@ dependencies {
     implementation (libs.hilt.android.v255)
     implementation (libs.androidx.hilt.navigation.compose.v100)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.firestore)
     kapt (libs.hilt.compiler.v254)
 
     implementation(libs.ktor.client.content.negotiation)

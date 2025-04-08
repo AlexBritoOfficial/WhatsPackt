@@ -5,11 +5,11 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
-class FCMTokenDataSource @Inject constructor(private val firebaseMessaging: FirebaseMessaging = FirebaseMessaging.getInstance())  {
+class FCMTokenDataSource @Inject constructor( val firebaseMessaging: FirebaseMessaging)  {
 
-    suspend fun getFCMToken(): String? {
+    suspend fun getFcMToken(): String? {
         return try {
-            FirebaseMessaging.getInstance().token.await()
+            firebaseMessaging.token.await()
         } catch (e: Exception) {
             null
         }
