@@ -4,11 +4,11 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 import com.packt.chat.domain.models.Message
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 data class FireStoreMessageModel(
     @Transient
-    val id: String,
+    val id: String = "",
     @get: PropertyName("senderId")
     @set: PropertyName("senderId")
     var senderId: String = "",
@@ -16,7 +16,7 @@ data class FireStoreMessageModel(
     @set: PropertyName("senderName")
     var senderName: String = "",
     @get: PropertyName("senderAvatar")
-    @set: PropertyName("SenderAvatar")
+    @set: PropertyName("senderAvatar")
     var senderAvatar: String = "",
     @get: PropertyName("content")
     @set: PropertyName("content")

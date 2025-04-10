@@ -10,8 +10,8 @@ import javax.inject.Inject
 class MessageRepository @Inject constructor(//private val dataSource: MessagesSocketDataSource,
                                             private val dataSource: FireStoreMessagesDataSource): IMessageRepository {
 
-    override suspend fun getMessages(chatId: String, userId: String): Flow<Message> {
-        return dataSource.getMessages(chatId = chatId, userId = userId)
+    override suspend fun getMessages(chatId: String): Flow<Message> {
+        return dataSource.getMessages(chatId = chatId)
     }
 
     override suspend fun sendMessage(chatId: String, message: Message) {

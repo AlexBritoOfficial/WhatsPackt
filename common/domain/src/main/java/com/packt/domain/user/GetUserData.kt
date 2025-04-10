@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetUserData @Inject constructor () {
 
     fun getData(): UserData{
-        return UserData("1", "Alex Brito", "")
+        return UserData("user1", "John Doe", "https://example.com/avatar1.jpg")
     }
 }

@@ -3,6 +3,8 @@ accompanistPager = "0.27.1"
 accompanistPagerVersion = "0.30.1"
 agp = "8.7.0"
 coil = "2.7.0"
+firebaseBom = "33.12.0"
+firebaseMessaging = "24.1.1"
 googleAccompanistPager = "0.36.0"
 googleHiltAndroid = "2.44"
 googleHiltAndroidVersion = "2.55"
@@ -50,6 +52,9 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidVersion" }
 hilt-android-compiler-v245 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }

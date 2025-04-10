@@ -26,20 +26,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +48,7 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(), chatId: String?, onBack: () -> Unit
 ) {
 
-    val messages by viewModel.messages.collectAsStateWithLifecycle()
+    val messages by viewModel.messages.collectAsState()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -79,7 +79,7 @@ fun ChatScreen(
             }
         }) { paddingValues ->
 
-        ListOfMessage(messages = viewModel.messages, paddingValues = paddingValues)
+        ListOfMessage(messages = messages, paddingValues = paddingValues)
 
     }
 

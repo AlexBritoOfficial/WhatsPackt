@@ -51,14 +51,34 @@ class ChatViewModel @Inject constructor(
     fun loadChatInformation(chatId: String) {
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-                chatRoom = getInitialChatRoomInformation(chatId)
-                withContext(Dispatchers.Main) {
-                    _uiState.value = chatRoom.toUI()
-                    _messages.value = chatRoom.lastMessages.map { it.toUi() }
-                    updateMessages()
-                }
+               getInitialChatRoomInformation(chatId)
             } catch (ie: Throwable) {
-                Log.d("TODO", "You can show here a message to the user indicating that an error has happened")
+                Log.d(
+                    "TODO",
+                    "You can show here a message to the user indicating that an error has happened"
+                )
+
+            }
+        }
+    }
+
+    // Load messages from FireStore
+    fun loadMessages(chatId: String) {
+        messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                retrieveMessages(chatId).map {
+                    it.toUi()
+                }.collect { message ->
+                    withContext(Dispatchers.Main) {
+                        _messages.value += message
+                    }
+                }
+
+            } catch (ie: Throwable) {
+                Log.d(
+                    "TODO",
+                    "You can show here a message to the user indicating that an error has happened"
+                )
 
             }
         }
@@ -66,8 +86,8 @@ class ChatViewModel @Inject constructor(
 
     fun updateMessages() {
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
-            try{
-                retrieveMessages(userId = getUserData.getData().id, chatId = chatRoom.id)
+            try {
+                retrieveMessages(chatId = chatRoom.id)
                     .map { it.toUi() }
                     .collect { message ->
                         withContext(Dispatchers.Main) {
@@ -75,7 +95,10 @@ class ChatViewModel @Inject constructor(
                         }
                     }
             } catch (ie: Throwable) {
-                Log.d("TODO", "You can show here a message to the user indicating that an error has happened")
+                Log.d(
+                    "TODO",
+                    "You can show here a message to the user indicating that an error has happened"
+                )
             }
         }
     }
@@ -92,7 +115,7 @@ class ChatViewModel @Inject constructor(
                 content = messageText,
                 contentDescription = messageText
             )
-            sendMessage(chatId = "1", message)
+            sendMessage(chatId = chatRoom.id, message)
         }
     }
 
