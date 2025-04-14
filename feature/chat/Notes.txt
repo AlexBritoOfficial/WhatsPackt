@@ -1,0 +1,17 @@
+When pressing the send button, the message sent to the Firestore Firebase Database
+is incorrect.
+
+Format being sent:
+messages: [
+    message (me9E69nsqL8QDLTJipne): {
+        content = "Hi"
+        id = "user1"
+        senderAvatar = "https://example.com/avatar1.jpg"
+        senderId = ""
+        senderName = "John Doe"
+        timestamp = April 13, 2025 at 12:48:13PM UTC-4
+    }
+]
+
+
+

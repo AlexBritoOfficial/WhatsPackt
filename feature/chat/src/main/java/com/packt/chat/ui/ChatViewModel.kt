@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.packt.chat.domain.models.ChatRoom
 import com.packt.chat.domain.usecases.DisconnectMessages
 import com.packt.chat.domain.usecases.GetInitialChatRoomInformation
-import com.packt.chat.domain.usecases.RetrieveMessages
+import com.packt.chat.domain.usecases.ObserveMessages
 import com.packt.chat.domain.usecases.SendMessage
 import com.packt.chat.ui.model.Chat
 import com.packt.chat.ui.model.Message
@@ -20,13 +20,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val retrieveMessages: RetrieveMessages,
+    private val observeMessages: ObserveMessages,
     private val sendMessage: SendMessage,
     private val disconnectMessages: DisconnectMessages,
     private val getInitialChatRoomInformation: GetInitialChatRoomInformation,
@@ -47,60 +48,41 @@ class ChatViewModel @Inject constructor(
 
     private lateinit var chatRoom: ChatRoom
 
-    // Load Chat Information from API
-    fun loadChatInformation(chatId: String) {
+    // Load Chat Information from Firebase
+    fun loadInitialChatInformation(chatId: String) {
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-               getInitialChatRoomInformation(chatId)
-            } catch (ie: Throwable) {
-                Log.d(
-                    "TODO",
-                    "You can show here a message to the user indicating that an error has happened"
-                )
-
-            }
-        }
-    }
-
-    // Load messages from FireStore
-    fun loadMessages(chatId: String) {
-        messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
-            try {
-                retrieveMessages(chatId).map {
-                    it.toUi()
-                }.collect { message ->
-                    withContext(Dispatchers.Main) {
-                        _messages.value += message
-                    }
+               chatRoom = getInitialChatRoomInformation(
+                   userId = getUserData.getData().id,
+                   chatId = chatId
+               )
+                withContext(Dispatchers.Main) {
+                    _uiState.value = chatRoom.toUI()
+                    _messages.value = chatRoom.lastMessages.map { it.toUi() }
                 }
-
             } catch (ie: Throwable) {
                 Log.d(
                     "TODO",
                     "You can show here a message to the user indicating that an error has happened"
                 )
-
             }
         }
     }
 
-    fun updateMessages() {
-        messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
-            try {
-                retrieveMessages(chatId = chatRoom.id)
-                    .map { it.toUi() }
-                    .collect { message ->
-                        withContext(Dispatchers.Main) {
-                            _messages.value += message
+    fun observeMessages(chatId: String) {
+            messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
+                    observeMessages(
+                        userId = getUserData.getData().id,
+                        chatId = chatId
+                    ).collect { message ->
+                        Log.d(TAG, "New message received: $message")
+                        _messages.update { current ->
+                            current + message.toUi()
                         }
                     }
-            } catch (ie: Throwable) {
-                Log.d(
-                    "TODO",
-                    "You can show here a message to the user indicating that an error has happened"
-                )
+                }
             }
-        }
     }
 
     fun onSendMessage(messageText: String) {
@@ -108,6 +90,7 @@ class ChatViewModel @Inject constructor(
             val user = getUserData.getData()
 
             val message = DomainMessage(
+                id = user.id.replace("chatId", "messageId"),
                 senderName = user.name,
                 senderAvatar = user.avatar,
                 isMine = true,

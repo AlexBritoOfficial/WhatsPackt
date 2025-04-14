@@ -102,7 +102,7 @@ fun ConversationListScreen(
 fun generateFakeConversations(): List<Conversation> {
     return listOf(
         Conversation(
-            id = "chatId1",
+            id = "1",
             name = "John Doe",
             message = "Hey, how are you?",
             timestamp = "10:30",

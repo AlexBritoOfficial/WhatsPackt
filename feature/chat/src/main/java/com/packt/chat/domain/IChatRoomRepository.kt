@@ -6,5 +6,5 @@ import com.packt.chat.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 
 interface IChatRoomRepository {
-    suspend fun getInitialChatRoom(chatId: String): Flow<ChatRoomModel>
+    suspend fun getInitialChatRoom(chatId: String): ChatRoom
 }

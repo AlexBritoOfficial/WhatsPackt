@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +40,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
-import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,10 +49,11 @@ fun ChatScreen(
 ) {
 
     val messages by viewModel.messages.collectAsState()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadChatInformation(chatId.orEmpty())
+    LaunchedEffect(messages.size) {
+        viewModel.loadInitialChatInformation(chatId.orEmpty())
+        viewModel.observeMessages(chatId.orEmpty())
     }
 
     Scaffold(topBar = {
@@ -112,6 +113,7 @@ fun SendMessageBox(sendMessage: (String) -> Unit) {
             .height(56.dp),
             onClick = {
                 sendMessage(text)
+                text = ""
             }) {
 
             Icon(

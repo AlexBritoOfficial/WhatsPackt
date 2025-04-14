@@ -2,6 +2,7 @@ package com.packt.chat.data.network.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
+import com.packt.chat.domain.models.ChatRoom
 import com.packt.chat.domain.models.Message
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,17 +31,16 @@ data class FireStoreMessageModel(
     companion object{
         fun fromDomain(message: Message): FireStoreMessageModel{
             return FireStoreMessageModel(
-                id = "",
+                senderId = message.id!!,
                 senderName = message.senderName,
-                senderAvatar = message.senderAvatar,
                 content = message.content)
         }
     }
 
     // Converts the FireStoreMessageModel into a Message object within the domain layer
-    fun toDomain(userId: String): Message {
+    fun toMessageDomain(userId: String): Message {
         return Message(
-            id = id,
+            id = senderId,
             senderName = senderName,
             senderAvatar = senderAvatar,
             isMine = userId == senderId,

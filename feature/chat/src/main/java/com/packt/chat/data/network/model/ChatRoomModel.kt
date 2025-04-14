@@ -10,23 +10,14 @@ data class ChatRoomModel(
     val id: String,
     val senderName: String,
     val senderAvatar: String,
-    val lastMessages: List<FireStoreMessageModel>
+    val lastMessages: List<WebsocketMessageModel>
 ) {
-
-    companion object{
-        fun fromDomain(message: ChatRoom): ChatRoomModel{
-            return ChatRoomModel(
-                id = "",
-                senderName = message.senderName,
-                senderAvatar = message.senderAvatar,
-                lastMessages = emptyList())
-        }
-    }
     fun toDomain(): ChatRoom {
         return ChatRoom(
             id = id,
             senderName = senderName,
             senderAvatar = senderAvatar,
-            lastMessages = lastMessages.map { it.toDomain(id) })
+            lastMessages = lastMessages.map { it.toDomain() }
+        )
     }
 }
