@@ -9,7 +9,7 @@ class FCMTokenDataSource @Inject constructor( val firebaseMessaging: FirebaseMes
 
     suspend fun getFcMToken(): String? {
         return try {
-            firebaseMessaging.token.await()
+           firebaseMessaging.token.await()
         } catch (e: Exception) {
             null
         }

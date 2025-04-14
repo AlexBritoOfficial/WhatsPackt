@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.tools.core)
     kapt (libs.hilt.compiler.v254)
 
     implementation(libs.ktor.client.content.negotiation)

@@ -4,7 +4,7 @@ object NavRoutes {
 
     const val ConversationsList = "conversations_list"
     const val NewConversation = "create_conversation"
-    const val Chat = "chat/{chatId}"
+    const val Chat = "chats/{chatId}"
 
     object ChatArgs {
         const val ChatId = "chatId"

@@ -2,6 +2,7 @@ package com.packt.chat.data.network.model
 
 import com.packt.chat.data.model.WebsocketMessageModel
 import com.packt.chat.domain.models.ChatRoom
+import com.packt.chat.domain.models.Message
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,6 +17,7 @@ data class ChatRoomModel(
             id = id,
             senderName = senderName,
             senderAvatar = senderAvatar,
-            messages = lastMessages.map { it.toDomain() })
+            lastMessages = lastMessages.map { it.toDomain() }
+        )
     }
 }

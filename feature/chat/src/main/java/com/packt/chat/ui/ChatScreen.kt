@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,20 +27,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
-import kotlinx.coroutines.flow.toList
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,11 +48,12 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(), chatId: String?, onBack: () -> Unit
 ) {
 
-    val messages by viewModel.messages.collectAsStateWithLifecycle()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val messages by viewModel.messages.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadChatInformation(chatId.orEmpty())
+    LaunchedEffect(messages.size) {
+        viewModel.loadInitialChatInformation(chatId.orEmpty())
+        viewModel.observeMessages(chatId.orEmpty())
     }
 
     Scaffold(topBar = {
@@ -79,7 +80,7 @@ fun ChatScreen(
             }
         }) { paddingValues ->
 
-        ListOfMessage(messages = viewModel.messages, paddingValues = paddingValues)
+        ListOfMessage(messages = messages, paddingValues = paddingValues)
 
     }
 
@@ -112,6 +113,7 @@ fun SendMessageBox(sendMessage: (String) -> Unit) {
             .height(56.dp),
             onClick = {
                 sendMessage(text)
+                text = ""
             }) {
 
             Icon(

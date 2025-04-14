@@ -3,6 +3,8 @@ accompanistPager = "0.27.1"
 accompanistPagerVersion = "0.30.1"
 agp = "8.7.0"
 coil = "2.7.0"
+firebaseBom = "33.12.0"
+firebaseMessaging = "24.1.1"
 googleAccompanistPager = "0.36.0"
 googleHiltAndroid = "2.44"
 googleHiltAndroidVersion = "2.55"
@@ -38,6 +40,7 @@ lifecycleRuntimeComposeAndroid = "2.8.7"
 firebaseMessagingKtx = "24.1.1"
 firebaseCommonKtx = "21.0.0"
 firebaseFirestore = "25.1.3"
+toolsCore = "1.0.0-alpha13"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -50,6 +53,9 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidVersion" }
 hilt-android-compiler-v245 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
@@ -88,6 +94,7 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+androidx-tools-core = { group = "androidx.privacysandbox.tools", name = "tools-core", version.ref = "toolsCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
