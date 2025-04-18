@@ -75,4 +75,16 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.messaging)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.1")
+
+    // Room
+    // https://mvnrepository.com/artifact/androidx.room/room-runtime
+    implementation("androidx.room:room-runtime:2.7.0")
+    // https://mvnrepository.com/artifact/androidx.room/room-common
+    implementation("androidx.room:room-common:2.7.0")
+    // https://mvnrepository.com/artifact/androidx.room/room-ktx
+    implementation("androidx.room:room-ktx:2.7.0")
+    // https://mvnrepository.com/artifact/androidx.room/room-compiler
+    kapt("androidx.room:room-compiler:2.7.0")
+
+
 }

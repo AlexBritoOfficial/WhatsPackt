@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 data class Conversation(
     @PrimaryKey
-    val id: Int,
+    val conversationId: String,
     @ColumnInfo(name = "last_message_time")
     val lastMessageTime: Long
 
