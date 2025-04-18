@@ -1,19 +1,18 @@
 package com.packt.data.database
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.Instant
 
 @Entity(
     tableName = "messages",
     foreignKeys = [
         ForeignKey(
             entity = Conversation::class,
-            parentColumns = arrayOf("id"),
+            parentColumns = arrayOf("conversationId"),
             childColumns = arrayOf("conversation_id"),
             onDelete = ForeignKey.CASCADE
         )
@@ -24,7 +23,7 @@ import androidx.room.PrimaryKey
 )
 
 data class Message(
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     @ColumnInfo(name = "conversation_id")
     val conversationId: String,
@@ -36,5 +35,18 @@ data class Message(
     val timestamp: String
 ) {
 
+    companion object {
+
+        fun fromDomain(id: String?,
+                       senderName: String,
+                       content: String,
+                       timestamp: String): Message{
+         return Message(   id = 0,
+             conversationId = id!!,
+             sender = senderName,
+             content = content,
+             timestamp = timestamp)
+        }
+    }
 }
 

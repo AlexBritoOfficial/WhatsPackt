@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.packt.chat.domain.models.ChatRoom
 import com.packt.chat.domain.usecases.DisconnectMessages
 import com.packt.chat.domain.usecases.GetInitialChatRoomInformation
+import com.packt.chat.domain.usecases.InsertConversationLocally
+import com.packt.chat.domain.usecases.InsertMessageLocally
 import com.packt.chat.domain.usecases.ObserveMessages
 import com.packt.chat.domain.usecases.SendMessage
 import com.packt.chat.ui.model.Chat
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +34,8 @@ class ChatViewModel @Inject constructor(
     private val sendMessage: SendMessage,
     private val disconnectMessages: DisconnectMessages,
     private val getInitialChatRoomInformation: GetInitialChatRoomInformation,
+    private val insertMessageLocally: InsertMessageLocally,
+    private val insertConversationLocally: InsertConversationLocally,
     private val getUserData: GetUserData
 ) : ViewModel() {
 
@@ -52,37 +57,58 @@ class ChatViewModel @Inject constructor(
     fun loadInitialChatInformation(chatId: String) {
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-               chatRoom = getInitialChatRoomInformation(
-                   userId = getUserData.getData().id,
-                   chatId = chatId
-               )
+                chatRoom = getInitialChatRoomInformation(
+                    userId = getUserData.getData().id,
+                    chatId = chatId
+                )
+
+                insertConversationLocally(
+                    conversation = com.packt.data.database.Conversation(
+                        conversationId = chatId,
+                        lastMessageTime = Instant.now().toEpochMilli()
+
+                    )
+                )
+
+                chatRoom.lastMessages.forEach { message ->
+                    insertMessageLocally(
+                        message = com.packt.data.database.Message(
+                            id = 0,
+                            conversationId = chatId,
+                            sender = message.senderName,
+                            content = message.content,
+                            timestamp = message.timestamp!!
+                        )
+                    )
+                }
                 withContext(Dispatchers.Main) {
                     _uiState.value = chatRoom.toUI()
                     _messages.value = chatRoom.lastMessages.map { it.toUi() }
                 }
             } catch (ie: Throwable) {
                 Log.d(
-                    "TODO",
-                    "You can show here a message to the user indicating that an error has happened"
+                    TAG,
+                    "Exception: ${ie.printStackTrace()}"
                 )
+
             }
         }
     }
 
     fun observeMessages(chatId: String) {
-            messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
-                viewModelScope.launch {
-                    observeMessages(
-                        userId = getUserData.getData().id,
-                        chatId = chatId
-                    ).collect { message ->
-                        Log.d(TAG, "New message received: $message")
-                        _messages.update { current ->
-                            current + message.toUi()
-                        }
+        messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
+                observeMessages(
+                    userId = getUserData.getData().id,
+                    chatId = chatId
+                ).collect { message ->
+                    Log.d(TAG, "New message received: $message")
+                    _messages.update { current ->
+                        current + message.toUi()
                     }
                 }
             }
+        }
     }
 
     fun onSendMessage(messageText: String) {
