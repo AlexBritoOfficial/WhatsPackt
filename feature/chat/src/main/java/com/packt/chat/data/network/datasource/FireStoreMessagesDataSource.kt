@@ -131,4 +131,8 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
         // Send the message to Firestore
         chatReference.add(FireStoreMessageModel.fromDomain(message))
     }
+
+    fun disconnect(){
+        firestore.getFirebaseFirestore().terminate()
+    }
 }
