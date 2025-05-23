@@ -70,6 +70,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth)
+    implementation(libs.google.firebase.analytics)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.gson)
     implementation(libs.androidx.tools.core)
     kapt (libs.hilt.compiler.v254)
 

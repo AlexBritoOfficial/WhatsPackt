@@ -13,7 +13,7 @@ class MessagesLocalDataSource @Inject constructor(
 ) {
 
     fun getLocalMessagesInConversation(conversation_id: Int): Flow<List<Message>> {
-        return messageDao.getMessages(conversation_id = conversation_id)
+        return messageDao.getMessagesInConversation(conversation_id = conversation_id)
     }
 
     suspend fun insertMessageLocally(message: Message): Long {

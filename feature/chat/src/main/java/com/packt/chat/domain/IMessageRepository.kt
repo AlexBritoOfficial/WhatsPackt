@@ -12,4 +12,6 @@ interface IMessageRepository {
 
     suspend fun disconnect()
 
+    suspend fun getInitialChatRoomInformationRemoteLocally(chat_id: Int): Flow<List<com.packt.data.database.Message>>
+
 }

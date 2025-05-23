@@ -13,6 +13,8 @@ class MessageRepository @Inject constructor(//private val dataSource: MessagesSo
     private val remoteDataSource: FireStoreMessagesDataSource,
     private val localDataSource: MessagesLocalDataSource): IMessageRepository {
 
+
+    /** REMOTE DATA SOURCE **/
     override suspend fun observeMessages(userId: String, chatId: String): Flow<Message> {
         return remoteDataSource.observeMessages(userId = userId, chatId = chatId)
     }
@@ -26,9 +28,13 @@ class MessageRepository @Inject constructor(//private val dataSource: MessagesSo
     }
 
     override suspend fun disconnect() {
+        remoteDataSource.disconnect()
     }
 
-    fun getLocalMessagesInConversation(conversation_id: Int): Flow<List<com.packt.data.database.Message>>{
+
+
+    /** LOCAL DATA SOURCE **/
+    override suspend fun getInitialChatRoomInformationRemoteLocally(conversation_id: Int): Flow<List<com.packt.data.database.Message>> {
         return localDataSource.getLocalMessagesInConversation(conversation_id =  conversation_id)
     }
 
