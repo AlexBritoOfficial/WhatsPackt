@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.packt.whatspackt"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.packt.whatspackt"
