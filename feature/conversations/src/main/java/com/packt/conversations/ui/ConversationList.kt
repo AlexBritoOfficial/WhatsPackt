@@ -8,11 +8,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.motionEventSpy
+import data.network.dto.FirestoreConversationModel
 import model.Conversation
 
 @Composable
 fun ConversationList(
-    conversations: List<Conversation>,
+    conversations: List<FirestoreConversationModel>,
     onConversationClick: (chatId: String) -> Unit
 ) {
     LazyColumn {

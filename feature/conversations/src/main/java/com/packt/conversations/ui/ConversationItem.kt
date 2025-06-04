@@ -14,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.packt.framework.ui.Avatar
+import data.network.dto.FirestoreConversationModel
 import model.Conversation
 
 @Composable
-fun ConversationItem(conversation: Conversation) {
+fun ConversationItem(conversation: FirestoreConversationModel) {
 
     Row(
         modifier = Modifier
@@ -28,9 +29,9 @@ fun ConversationItem(conversation: Conversation) {
 
         /** Avatar **/
         Avatar(
-            imageUrl = conversation.avatar,
+            imageUrl = conversation.profileImageUrl!!,
             size = 50.dp,
-            contentDescription = "${conversation.name}'s avatar"
+            contentDescription = "${conversation.participants[0]}'s avatar"
         )
 
         /** Spacer **/
@@ -41,13 +42,13 @@ fun ConversationItem(conversation: Conversation) {
 
             /** Conversation Name**/
             Text(
-                text = conversation.name,
+                text = conversation.participants[0],
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(0.7f)
             )
 
             /** Conversation Maessage **/
-            Text(text = conversation.message)
+            Text(text = conversation.participants[0])
         }
 
         /** Spacer **/
@@ -57,7 +58,7 @@ fun ConversationItem(conversation: Conversation) {
         Column(horizontalAlignment = Alignment.End) {
 
             /** Conversation Timestamp**/
-            Text(text = conversation.timestamp,)
+            Text(text = conversation.lastMessageTimestamp.toString(),)
 
             /** Conversation Unread Messages **/
             if(conversation.unreadCount > 0){

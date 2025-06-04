@@ -18,20 +18,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import model.Conversation
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationListScreen(
+    viewModel: ConversationsViewModel = hiltViewModel(),
     onNewConversationClick: () -> Unit,
     onConversationClick: (chatId: String) -> Unit
 ) {
+
+    val conversations by viewModel.conversations.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getConversations()
+    }
 
     val tabs = generateTabs()
     val selectedIndex by remember { mutableStateOf(1) }
@@ -72,7 +82,8 @@ fun ConversationListScreen(
 
                     1 -> {
                         ConversationList(
-                            conversations = generateFakeConversations(),
+//                            conversations = generateFakeConversations(),
+                            conversations = conversations,
                             onConversationClick = onConversationClick
                         )
                     }

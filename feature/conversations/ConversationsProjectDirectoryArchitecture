@@ -1,0 +1,39 @@
+feature/
+  conversations/
+    src/
+      main/
+        java/
+          com/
+            packt/
+              conversations/
+                data/               <-- Data layer (Firestore + Room)
+                  model/            <-- Firestore DTOs & Room Entities
+                    FirestoreConversationDto.kt
+                    RoomConversationEntity.kt
+                  local/            <-- Room-related classes
+                    ConversationDao.kt
+                    ConversationsLocalDataSource.kt
+                  remote/           <-- Firestore-related classes
+                    ConversationsRemoteDataSource.kt
+                  repository/       <-- Repository Implementation
+                    ConversationsRepositoryImpl.kt
+
+                domain/             <-- Domain layer (pure business logic)
+                  model/            <-- Domain Models
+                    Conversation.kt
+                  repository/       <-- Repository interface
+                    ConversationsRepository.kt
+                  usecase/          <-- UseCase classes
+                    GetConversationsUseCase.kt
+                    RefreshConversationsUseCase.kt
+
+                presentation/       <-- UI Layer (ViewModel + UI)
+                  ui/               <-- Composables or Fragments
+                    ConversationsScreen.kt
+                    ConversationItem.kt
+                  viewmodel/        <-- ViewModels
+                    ConversationsViewModel.kt
+                  state/            <-- UI State classes (optional)
+                    ConversationsUiState.kt
+
+                util/               <-- Utility classes (optional)

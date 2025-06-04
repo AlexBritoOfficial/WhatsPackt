@@ -86,14 +86,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose.v100)
     kapt(libs.hilt.compiler.v254)
 
-    // ☁️ Firebase Services
-    implementation(libs.firebase.common.ktx)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.auth)
-    implementation(libs.google.firebase.analytics)
-    implementation(libs.firebase.storage.ktx)
-
     // ⚙️ Serialization / Utilities
     implementation(libs.gson)
     implementation(libs.javax.inject)
