@@ -16,8 +16,11 @@ data class FirestoreConversationModel(
     val chatType: String = "private",
     val title: String? = null,
     val profileImageUrl: String? = null,
-    val unreadCount: Int = 0  // ✅ New field
-) {
+    val unreadCount: Int = 0,
+    val otherParticipantName: String = "",     // new
+    val otherParticipantAvatar: String = ""    // new
+)
+ {
     // Required no-arg constructor for Firebase
     constructor() : this(
         id = "",

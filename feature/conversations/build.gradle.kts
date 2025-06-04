@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.packt.whatspackt.feature.conversations"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -67,6 +67,9 @@ dependencies {
 
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
 
     // 🔧 Dependency Injection - Hilt

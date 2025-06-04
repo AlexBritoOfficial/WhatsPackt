@@ -82,7 +82,6 @@ fun ConversationListScreen(
 
                     1 -> {
                         ConversationList(
-//                            conversations = generateFakeConversations(),
                             conversations = conversations,
                             onConversationClick = onConversationClick
                         )
