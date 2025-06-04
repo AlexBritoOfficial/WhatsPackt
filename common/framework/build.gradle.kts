@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+
 }
 
 android {
@@ -55,4 +57,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // 🔧 Dependency Injection - Hilt
+    implementation(libs.hilt.android.v255)
+    implementation(libs.androidx.hilt.navigation.compose.v100)
+    kapt(libs.hilt.compiler.v254)
+
+    // ☁️ Firebase Services
+    api(libs.firebase.common.ktx)
+    api(libs.firebase.firestore)
+    api(libs.firebase.messaging)
+    api(libs.firebase.auth)
+    api(libs.google.firebase.analytics)
+    api(libs.firebase.storage.ktx)
 }

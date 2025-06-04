@@ -8,11 +8,12 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UploadMessagesScheduler @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
 
     companion object {

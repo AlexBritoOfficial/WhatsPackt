@@ -2,6 +2,7 @@ package com.packt.whatspackt
 
 import android.app.Application
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.FirebaseApp
 import com.packt.chat.data.network.repository.UploadMessagesScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class WhatsPacktApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        FirebaseApp.initializeApp(this)
        // uploadMessagesScheduler.schedulePeriodicUpload()
 
     }

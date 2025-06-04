@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.packt.framework.ui.Avatar
+import data.network.dto.FirestoreConversationModel
 import model.Conversation
 
 @Composable
-fun ConversationItem(conversation: Conversation) {
-
+fun ConversationItem(conversation: FirestoreConversationModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -26,46 +26,37 @@ fun ConversationItem(conversation: Conversation) {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        /** Avatar **/
         Avatar(
-            imageUrl = conversation.avatar,
+            imageUrl = conversation.otherParticipantAvatar.ifEmpty { "default_avatar_url" },
             size = 50.dp,
-            contentDescription = "${conversation.name}'s avatar"
+            contentDescription = "${conversation.otherParticipantName}'s avatar"
         )
 
-        /** Spacer **/
         Spacer(modifier = Modifier.width(8.dp))
 
-        /** Column **/
         Column {
-
-            /** Conversation Name**/
             Text(
-                text = conversation.name,
+                text = conversation.otherParticipantName.ifEmpty { "Unknown" },
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(0.7f)
             )
-
-            /** Conversation Maessage **/
-            Text(text = conversation.message)
+            Text(text = conversation.lastMessage)
         }
 
-        /** Spacer **/
         Spacer(modifier = Modifier.width(8.dp))
 
-        /** Column **/
         Column(horizontalAlignment = Alignment.End) {
-
-            /** Conversation Timestamp**/
-            Text(text = conversation.timestamp,)
-
-            /** Conversation Unread Messages **/
-            if(conversation.unreadCount > 0){
-                Text(text = conversation.unreadCount.toString(),
+            Text(
+                text = conversation.lastMessageTimestamp?.toDate()?.toString() ?: "",
+            )
+            if (conversation.unreadCount > 0) {
+                Text(
+                    text = conversation.unreadCount.toString(),
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(top = 4.dp))
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
-
     }
 }
+

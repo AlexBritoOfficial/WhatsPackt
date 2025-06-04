@@ -3,6 +3,7 @@ package com.packt.chat.data.network.datasource
 import android.util.Log
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
 import com.packt.chat.data.network.model.FireStoreMessageModel
 import com.packt.chat.domain.models.ChatRoom
 import com.packt.chat.domain.models.Message
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class FireStoreMessagesDataSource @Inject constructor(private val firestore: FirebaseFirestoreProvider) {
+class FireStoreMessagesDataSource @Inject constructor(private val firestore: FirebaseFirestore) {
 
     companion object {
         const val TAG = "FireStoreMessagesDataSource"
@@ -24,7 +25,7 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
             // and then a subcollection called "messages" where we use chatId as the document ID.
 
 
-            val chatReference = firestore.getFirebaseFirestore().collection("chats")
+            val chatReference = firestore.collection("chats")
                 .document(chatId)
                 .collection("messages")
 
@@ -43,8 +44,8 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
                 // Listening for new messages coming from the Firestore database, if there isn't return an empty list
                 val messages = snapshot?.documents?.mapNotNull { document ->
 
-                    Log.d("FireStoreDebug", "Raw doc: ${document.data}")
-                    Log.d("FireStorePath", "Path doc: ${firestore.getFirebaseFirestore()}")
+                    Log.d(TAG, "Raw doc: ${document.data}")
+                    Log.d(TAG, "Path doc: ${firestore}")
 
                     // Map the document to a FireStoreMessageModel object
                     val message = document.toObject(FireStoreMessageModel::class.java)
@@ -81,7 +82,7 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
 
         // Create a reference to the "chats" collection in Firestore,
         // and then a subcollection called "messages" where we use chatId as the document ID.
-        val chatReference = firestore.getFirebaseFirestore().collection("chats")
+        val chatReference = firestore.collection("chats")
             .document(chatId)
             .collection("messages").orderBy("timestamp", Query.Direction.ASCENDING)
 
@@ -124,7 +125,7 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
     fun sendMessage(chatId: String, message: Message) {
 
         // Create a reference to the "chats" collection in Firestore,
-        val chatReference = firestore.getFirebaseFirestore().collection("chats")
+        val chatReference = firestore.collection("chats")
             .document(chatId)
             .collection("messages")
 
@@ -133,6 +134,6 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
     }
 
     fun disconnect(){
-        firestore.getFirebaseFirestore().terminate()
+        firestore.terminate()
     }
 }

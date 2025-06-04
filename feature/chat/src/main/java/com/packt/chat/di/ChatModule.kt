@@ -1,9 +1,7 @@
 package com.packt.chat.di
 
-import android.content.Context
 import com.packt.chat.data.RestClient
 import com.packt.chat.data.WebsocketClient
-import com.packt.chat.data.network.datasource.FirebaseFirestoreProvider
 import com.packt.chat.data.network.datasource.repository.MessageRepository
 import com.packt.chat.data.network.repository.ChatRoomRepository
 import com.packt.chat.domain.IChatRoomRepository
@@ -12,11 +10,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import javax.inject.Named
-import javax.inject.Singleton
 
 
 @InstallIn(SingletonComponent::class)
@@ -57,11 +53,6 @@ class ChatModule {
         return API_CHAT_ROOM_URL
     }
 
-    @Provides
-    @Singleton
-    fun providesFirebaseFirestoreProvider(@ApplicationContext context: Context): FirebaseFirestoreProvider {
-        return FirebaseFirestoreProvider(context = context)
-    }
 }
 
 @InstallIn(SingletonComponent::class)
