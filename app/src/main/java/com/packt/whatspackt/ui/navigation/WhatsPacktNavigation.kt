@@ -1,5 +1,6 @@
 package com.packt.whatspackt.ui.navigation
 
+import StartNewConversationScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -10,7 +11,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.packt.chat.ui.ChatScreen
 import com.packt.conversations.ui.ConversationListScreen
-import com.packt.create_chat.CreateConversationScreen
 import com.packt.framework.navigation.DeepLinks
 import com.packt.framework.navigation.NavRoutes
 
@@ -42,9 +42,7 @@ private fun NavGraphBuilder.addConversationList(navController: NavHostController
 private fun NavGraphBuilder.addNewConversation(navController: NavHostController) {
 
     composable(route = NavRoutes.NewConversation) {
-        CreateConversationScreen(onCreateConversation = {
-            navController.navigate(NavRoutes.Chat)
-        })
+        StartNewConversationScreen()
     }
 
 }

@@ -50,6 +50,8 @@ workRuntimeKtx = "2.10.1"
 runtimeAndroid = "1.6.6"
 lifecycleViewmodelAndroid = "2.8.7"
 lifecycleViewmodelAndroidVersion = "2.8.6"
+coilBase = "2.7.0"
+foundationLayoutAndroid = "1.6.6"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -114,6 +116,8 @@ androidx-tools-core = { group = "androidx.privacysandbox.tools", name = "tools-c
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycleViewmodelAndroid" }
 lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycleViewmodelAndroidVersion" }
+coil-base = { group = "io.coil-kt", name = "coil-base", version.ref = "coilBase" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
