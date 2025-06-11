@@ -7,31 +7,18 @@ import com.google.firebase.firestore.ServerTimestamp
 @IgnoreExtraProperties
 data class FirestoreConversationModel(
     val id: String = "",
+    val chatType: String = "direct",
     val participants: List<String> = emptyList(),
     val lastMessage: String = "",
-    @ServerTimestamp
-    val lastMessageTimestamp: Timestamp? = null,
-    @ServerTimestamp
-    val createdAt: Timestamp? = null,
-    val chatType: String = "private",
+    val lastMessageTimestamp: com.google.firebase.Timestamp? = null,
+    val participantMeta: Map<String, ParticipantMeta> = emptyMap(),
     val title: String? = null,
-    val profileImageUrl: String? = null,
-    val unreadCount: Int = 0,
-    val otherParticipantName: String = "",     // new
-    val otherParticipantAvatar: String = ""    // new
+    val groupPhotoUrl: String? = null,
+    val otherParticipantName: String = "",
+    val otherParticipantAvatar: String = ""
 )
- {
-    // Required no-arg constructor for Firebase
-    constructor() : this(
-        id = "",
-        participants = emptyList(),
-        lastMessage = "",
-        lastMessageTimestamp = null,
-        createdAt = null,
-        chatType = "private",
-        title = null,
-        profileImageUrl = null,
-        unreadCount = 0
-    )
 
-}
+data class ParticipantMeta(
+    val unreadCount: Int = 0,
+    val lastRead: com.google.firebase.Timestamp? = null
+)

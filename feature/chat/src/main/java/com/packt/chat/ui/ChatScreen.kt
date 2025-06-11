@@ -45,7 +45,8 @@ import com.packt.chat.ui.model.MessageContent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
-    viewModel: ChatViewModel = hiltViewModel(), chatId: String?, onBack: () -> Unit
+    viewModel: ChatViewModel = hiltViewModel(),
+    chatId: String?, onBack: () -> Unit
 ) {
 
     val messages by viewModel.messages.collectAsState()

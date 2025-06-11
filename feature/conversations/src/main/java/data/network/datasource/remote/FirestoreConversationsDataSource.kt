@@ -2,25 +2,23 @@ package data.network.datasource.remote
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import data.network.dto.FirestoreConversationModel
+import data.network.dto.UserModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class ConversationsRemoteDataSource @Inject constructor(
-    private val firebaseFirestore: FirebaseFirestore
+class FireStoreConversationsRemoteDataSource @Inject constructor(
+    private val firestore: FirebaseFirestore
 ) {
-
     companion object {
-        const val TAG = "ConversationsRemoteDataSource"
+        private const val TAG = "ConversationsRemoteDataSource"
     }
 
-
     fun getConversations(userId: String): Flow<List<FirestoreConversationModel>> = callbackFlow {
-        val query = firebaseFirestore
+        val query = firestore
             .collection("chats")
             .whereArrayContains("participants", userId)
 
@@ -30,67 +28,46 @@ class ConversationsRemoteDataSource @Inject constructor(
                 return@addSnapshotListener
             }
 
-            if (snapshot != null) {
-                val conversations = mutableListOf<FirestoreConversationModel>()
-                var pendingLookups = snapshot.documents.size
+            if (snapshot == null || snapshot.isEmpty) {
+                trySend(emptyList())
+                return@addSnapshotListener
+            }
 
-                if (pendingLookups == 0) {
-                    trySend(conversations).isSuccess
-                    return@addSnapshotListener
+            val results = mutableListOf<FirestoreConversationModel>()
+            var pending = snapshot.size()
+
+            snapshot.documents.forEach { doc ->
+                val chat = doc.toObject<FirestoreConversationModel>()?.copy(id = doc.id)
+                    ?: return@forEach
+
+                val otherUserId = chat.participants.firstOrNull { it != userId }
+
+                if (otherUserId == null) {
+                    pending--
+                    if (pending == 0) trySend(results)
+                    return@forEach
                 }
 
-                snapshot.documents.forEach { document ->
-                    val fireStoreConversationModel = document.toObject<FirestoreConversationModel>() ?: return@forEach
-                    val chatId = document.id
-
-                    if (!fireStoreConversationModel.participants.contains(userId)) {
-                        pendingLookups--
-                        return@forEach
+                firestore.collection("users").document(otherUserId)
+                    .get()
+                    .addOnSuccessListener { userSnapshot ->
+                        val user = userSnapshot.toObject<UserModel>()
+                        val enriched = chat.copy(
+                            otherParticipantName = user?.senderName ?: "Unknown",
+                            otherParticipantAvatar = user?.senderAvatar ?: ""
+                        )
+                        results.add(enriched)
+                        pending--
+                        if (pending == 0) trySend(results)
                     }
-
-                    val otherUserId = fireStoreConversationModel.participants.firstOrNull { it != userId }
-                    if (otherUserId == null) {
-                        pendingLookups--
-                        return@forEach
+                    .addOnFailureListener {
+                        Log.e(TAG, "Failed to fetch user $otherUserId", it)
+                        pending--
+                        if (pending == 0) trySend(results)
                     }
-
-                    // 🔄 Fetch the latest message
-                    firebaseFirestore
-                        .collection("chats")
-                        .document(chatId)
-                        .collection("messages")
-                        .orderBy("timestamp", Query.Direction.DESCENDING)
-                        .get()
-                        .addOnSuccessListener { messagesSnapshot ->
-                            val messageDoc = messagesSnapshot.documents.firstOrNull()
-                            val otherName = messageDoc?.getString("senderName") ?: ""
-                            val otherAvatar = messageDoc?.getString("senderAvatar") ?: ""
-
-                            val enriched = fireStoreConversationModel.copy(
-                                id = chatId,
-                                otherParticipantName = otherName,
-                                otherParticipantAvatar = otherAvatar
-                            )
-
-                            conversations.add(enriched)
-                            pendingLookups--
-
-                            if (pendingLookups == 0) {
-                                trySend(conversations).isSuccess
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e(TAG, "Failed to fetch latest message for chat $chatId", e)
-                            pendingLookups--
-                            if (pendingLookups == 0) {
-                                trySend(conversations).isSuccess
-                            }
-                        }
-                }
             }
         }
 
         awaitClose { listener.remove() }
     }
-
 }
