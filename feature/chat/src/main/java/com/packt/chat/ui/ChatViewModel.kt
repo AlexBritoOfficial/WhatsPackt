@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -117,8 +116,8 @@ class ChatViewModel @Inject constructor(
 
             val message = DomainMessage(
                 id = user.id.replace("chatId", "messageId"),
-                senderName = user.name,
-                senderAvatar = user.avatar,
+                senderName = user.displayName,
+                senderAvatar = user.avatarUrl,
                 isMine = true,
                 contentType = DomainMessage.ContentType.TEXT,
                 content = messageText,

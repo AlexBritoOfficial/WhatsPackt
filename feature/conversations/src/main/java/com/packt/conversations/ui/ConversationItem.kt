@@ -49,13 +49,13 @@ fun ConversationItem(conversation: FirestoreConversationModel) {
             Text(
                 text = conversation.lastMessageTimestamp?.toDate()?.toString() ?: "",
             )
-            if (conversation.unreadCount > 0) {
-                Text(
-                    text = conversation.unreadCount.toString(),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
+//            if (conversation. > 0) {
+//                Text(
+//                    text = conversation.unreadCount.toString(),
+//                    color = MaterialTheme.colorScheme.primary,
+//                    modifier = Modifier.padding(top = 4.dp)
+//                )
+//            }
         }
     }
 }
