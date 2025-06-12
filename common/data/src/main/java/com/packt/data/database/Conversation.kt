@@ -8,8 +8,14 @@ import androidx.room.PrimaryKey
 
 data class Conversation(
     @PrimaryKey
-    val conversationId: String,
-    @ColumnInfo(name = "last_message_time")
-    val lastMessageTime: Long
+    val chatId: String, // Firestore Document ID of the chat
 
+    val chatType: String?,
+    val createdAt: Long?, // Store Timestamp as epoch millis
+    val lastMessage: String?,
+    val lastMessageTimestamp: Long?,
+    val profileImageUrl: String?,
+    val title: String?,
+    val unreadAccount: String?,
+    val unreadCount: Int?
 )

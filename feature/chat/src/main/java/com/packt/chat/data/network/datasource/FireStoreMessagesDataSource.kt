@@ -21,62 +21,58 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
     private lateinit var chatRoom: ChatRoom
     fun getInitialChatRoomInformation(userId: String, chatId: String): Flow<ChatRoom> =
         callbackFlow {
-            // Create a reference to the "chats" collection in Firestore,
-            // and then a subcollection called "messages" where we use chatId as the document ID.
+            val chatDocRef = firestore.collection("chats").document(chatId)
 
+            val listenerRegistration = chatDocRef.collection("messages")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        close(error)
+                        return@addSnapshotListener
+                    }
 
-            val chatReference = firestore.collection("chats")
-                .document(chatId)
-                .collection("messages")
+                    val fireStoreMessages = snapshot?.documents?.mapNotNull { doc ->
+                        doc.toObject(FireStoreMessageModel::class.java)?.copy(id = doc.id)
+                    } ?: emptyList()
 
-            // Create a query to order the messages by their timestamp in ascending order.
-            val query = chatReference.orderBy("timestamp", Query.Direction.ASCENDING)
+                    val domainMessages = fireStoreMessages.map { it.toMessageDomain(userId) }
 
-            // Add a snap shot listener to the query.
-            val listenerRegistration = query.addSnapshotListener { snapshot, error ->
+                    // Fetch the chat document to get participant IDs
+                    chatDocRef.get().addOnSuccessListener { chatSnapshot ->
+                        val participants = chatSnapshot.get("participants") as? List<String>
+                        val otherUserId = participants?.firstOrNull { it != userId }
 
-                // if there is an error, close the flow and return
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
+                        if (otherUserId != null) {
+                            firestore.collection("users").document(otherUserId)
+                                .get()
+                                .addOnSuccessListener { userSnapshot ->
+                                    val otherUserName =
+                                        userSnapshot.getString("displayName").orEmpty()
+                                    val otherUserAvatar =
+                                        userSnapshot.getString("avatarUrl").orEmpty()
 
-                // Listening for new messages coming from the Firestore database, if there isn't return an empty list
-                val messages = snapshot?.documents?.mapNotNull { document ->
-
-                    Log.d(TAG, "Raw doc: ${document.data}")
-                    Log.d(TAG, "Path doc: ${firestore}")
-
-                    // Map the document to a FireStoreMessageModel object
-                    val message = document.toObject(FireStoreMessageModel::class.java)
-
-                    // Copy the message with the document ID and emit it
-                    message?.copy(id = document.id)
-
-                } ?: emptyList()
-
-                // Convert the list of FireStoreMessageModel objects into a list of Message objects
-                val chatRoomDomainMessages = messages.map { it.toMessageDomain(userId = userId) }
-
-                chatRoomDomainMessages.forEach { message ->
-
-                    if (message.id != userId) {
-                        chatRoom = ChatRoom(
-                            id = chatId,
-                            senderName = message.senderName,
-                            senderAvatar = message.senderAvatar,
-                            lastMessages = chatRoomDomainMessages
-                        )
+                                    chatRoom = ChatRoom(
+                                        id = chatId,
+                                        senderName = otherUserName,
+                                        senderAvatar = otherUserAvatar,
+                                        lastMessages = domainMessages
+                                    )
+                                    trySend(chatRoom)
+                                }
+                                .addOnFailureListener { e ->
+                                    close(e)
+                                }
+                        } else {
+                            close(Exception("Could not find other participant"))
+                        }
+                    }.addOnFailureListener { e ->
+                        close(e)
                     }
                 }
 
-                trySend(chatRoom)
-
-            }
-            awaitClose {
-                listenerRegistration.remove()
-            }
+            awaitClose { listenerRegistration.remove() }
         }
+
 
     fun observeMessages(userId: String, chatId: String): Flow<Message> = callbackFlow {
 
@@ -105,8 +101,9 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
 
                     if (change.type == DocumentChange.Type.ADDED) {
                         try {
-                            val fireStoreMsg = change.document.toObject(FireStoreMessageModel::class.java)
-                            val domainMsg = fireStoreMsg.toMessageDomain(userId = userId)
+                            val fireStoreMsg =
+                                change.document.toObject(FireStoreMessageModel::class.java)
+                            val domainMsg = fireStoreMsg.toMessageDomain(currentUserId = userId)
                             trySend(domainMsg)
 
                         } catch (e: Exception) {
@@ -133,7 +130,7 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
         chatReference.add(FireStoreMessageModel.fromDomain(message))
     }
 
-    fun disconnect(){
+    fun disconnect() {
         firestore.terminate()
     }
 }

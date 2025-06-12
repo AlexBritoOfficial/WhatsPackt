@@ -53,8 +53,7 @@ fun ChatScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(messages.size) {
-        viewModel.loadInitialChatInformation(chatId.orEmpty())
-        viewModel.observeMessages(chatId.orEmpty())
+        viewModel.loadAndObserveChat(chatId.orEmpty())
     }
 
     Scaffold(topBar = {

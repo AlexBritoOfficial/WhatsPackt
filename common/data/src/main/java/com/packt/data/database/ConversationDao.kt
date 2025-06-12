@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ConversationDao {
 
-    @Query("SELECT * FROM conversations ORDER BY last_message_time DESC")
+    @Query("SELECT * FROM conversations ORDER BY lastMessageTimestamp DESC")
     fun getAllConversations(): Flow<List<Conversation>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

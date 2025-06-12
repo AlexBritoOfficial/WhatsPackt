@@ -18,12 +18,19 @@ class WebsocketMessageModel(
         const val TYPE_TEXT = "TEXT"
         const val TYPE_IMAGE = "IMAGE"
 
-        // Takes the current Message from the Domain layer anc converts it into a WebsocketMessageModel
-        fun fromDomain(message: Message): WebsocketMessageModel {
+        /**
+         * Converts a domain [Message] into a [WebsocketMessageModel].
+         * Since domain.Message doesn't contain senderName/senderAvatar, they must be passed separately.
+         */
+        fun fromDomain(
+            message: Message,
+            senderName: String,
+            senderAvatar: String
+        ): WebsocketMessageModel {
             return WebsocketMessageModel(
                 id = message.id,
-                senderName = message.senderName,
-                senderAvatar = message.senderAvatar,
+                senderName = senderName,
+                senderAvatar = senderAvatar,
                 timestamp = message.timestamp,
                 isMine = message.isMine,
                 messageType = message.fromContentType(),
@@ -33,12 +40,13 @@ class WebsocketMessageModel(
         }
     }
 
-    // Converts the WebSocketMessage Model into a Message object within the domain layer
+    /**
+     * Converts this WebSocket model into a domain-layer [Message].
+     * senderName and senderAvatar are intentionally not passed into the domain model.
+     */
     fun toDomain(): Message {
         return Message(
             id = id,
-            senderName = senderName,
-            senderAvatar = senderAvatar,
             timestamp = timestamp,
             isMine = isMine,
             contentType = toContentType(),
@@ -47,17 +55,18 @@ class WebsocketMessageModel(
         )
     }
 
-    fun toContentType(): Message.ContentType {
-        return when (messageType) {
+    private fun toContentType(): Message.ContentType {
+        return when (messageType.uppercase()) {
             TYPE_IMAGE -> Message.ContentType.IMAGE
             else -> Message.ContentType.TEXT
         }
     }
 }
 
+// Extension function to convert contentType enum into string
 fun Message.fromContentType(): String {
     return when (contentType) {
-      Message.ContentType.IMAGE -> WebsocketMessageModel.TYPE_IMAGE
+        Message.ContentType.IMAGE -> WebsocketMessageModel.TYPE_IMAGE
         else -> WebsocketMessageModel.TYPE_TEXT
     }
 }

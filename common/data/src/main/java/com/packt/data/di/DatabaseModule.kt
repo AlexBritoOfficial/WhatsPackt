@@ -29,6 +29,6 @@ object DatabaseModule {
 
     @Provides
     fun providesConversationsDao(database: ChatAppDatabase): ConversationDao {
-        return database.conversationDao()
+        return database.chatDao()
     }
 }

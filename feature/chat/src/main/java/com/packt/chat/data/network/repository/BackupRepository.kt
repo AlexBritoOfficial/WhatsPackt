@@ -26,7 +26,7 @@ class BackupRepository @Inject constructor(
             for (conversation in it) {
 
                 val messages =
-                    messageDao.getMessagesInConversation(conversation_id = conversation.conversationId.toInt())
+                    messageDao.getMessagesInConversation(conversation_id = conversation.chatId.toInt())
 
                 // Create a JSON representation of the messages
                 val messagesJson = gson.toJson(messages)
@@ -37,7 +37,7 @@ class BackupRepository @Inject constructor(
                 tempFile.writeText(messagesJson)
 
                 // Upload the file to Firebase Storage
-                val remotePath = "conversations/{${conversation.conversationId}/messages}"
+                val remotePath = "conversations/{${conversation.chatId}/messages}"
                 storageDataSource.uploadFile(tempFile, remotePath)
 
                 // Delete the local file
