@@ -16,4 +16,9 @@ sealed class MessageContent {
         val imageUrl: String,
         val contentDescription: String
     ) : MessageContent()
+
+    data class VideoMessage(
+        val imageUrl: String,
+        val contentDescription: String
+    ) : MessageContent()
 }

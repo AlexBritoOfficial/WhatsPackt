@@ -1,36 +1,42 @@
 package com.packt.data.database
 
+import com.packt.data.database.AppUser
+import com.packt.data.database.AppUserDao
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 
+@Database(
+    entities = [
+        Conversation::class,
+        Message::class,
+        AppUser::class
+    ],
+    version = 1,
+    exportSchema = false
+)
+abstract class ChatAppDatabase : RoomDatabase() {
 
-@Database(entities = [Message::class, Conversation::class], version = 1)
-abstract class ChatAppDatabase(): RoomDatabase() {
+    abstract fun chatDao(): ConversationDao
     abstract fun messageDao(): MessageDao
-    abstract fun conversationDao(): ConversationDao
-
+    abstract fun appUserDao(): AppUserDao
 
     companion object {
         @Volatile
         private var INSTANCE: ChatAppDatabase? = null
 
-        fun getDatabase(context: Context): ChatAppDatabase{
-            return INSTANCE ?: synchronized(this){
+        fun getDatabase(context: Context): ChatAppDatabase {
+            return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ChatAppDatabase::class.java,
-                    "chat_database"
-                ).build()
+                    "chat_app_database"
+                ).fallbackToDestructiveMigration(dropAllTables = true) // 👈 THIS DROPS AND REBUILDS THE DB
+                    .build()
                 INSTANCE = instance
                 instance
             }
-
         }
     }
-
 }

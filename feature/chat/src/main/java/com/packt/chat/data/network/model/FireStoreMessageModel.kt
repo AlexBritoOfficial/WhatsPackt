@@ -2,7 +2,6 @@ package com.packt.chat.data.network.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
-import com.packt.chat.domain.models.ChatRoom
 import com.packt.chat.domain.models.Message
 import java.text.SimpleDateFormat
 import java.util.*
@@ -10,57 +9,63 @@ import java.util.*
 data class FireStoreMessageModel(
     @Transient
     val id: String = "",
-    @get: PropertyName("senderId")
-    @set: PropertyName("senderId")
-    var senderId: String = "",
-    @get: PropertyName("senderName")
-    @set: PropertyName("senderName")
-    var senderName: String = "",
-    @get: PropertyName("senderAvatar")
-    @set: PropertyName("senderAvatar")
-    var senderAvatar: String = "",
+
     @get: PropertyName("content")
     @set: PropertyName("content")
     var content: String = "",
+
+    @get: PropertyName("senderId")
+    @set: PropertyName("senderId")
+    var senderId: String = "",
+
+    @get: PropertyName("messageType")
+    @set: PropertyName("messageType")
+    var messageType: String = "text", // default to "text"
+
     @get: PropertyName("timestamp")
     @set: PropertyName("timestamp")
-    var timestamp : Timestamp = Timestamp.now()
+    var timestamp: Timestamp = Timestamp.now()
 ) {
 
-    // Converts the Message from the Domain layer into a FireStoreMessageModel
-    companion object{
-        fun fromDomain(message: Message): FireStoreMessageModel{
+    companion object {
+        fun fromDomain(message: Message): FireStoreMessageModel {
             return FireStoreMessageModel(
-                senderId = message.id!!,
-                senderName = message.senderName,
-                content = message.content)
+                senderId = message.id ?: "",
+                content = message.content,
+                messageType = message.contentType.name.lowercase()
+            )
         }
     }
 
-    // Converts the FireStoreMessageModel into a Message object within the domain layer
-    fun toMessageDomain(userId: String): Message {
+    fun toMessageDomain(currentUserId: String): Message {
         return Message(
-            id = senderId,
-            senderName = senderName,
-            senderAvatar = senderAvatar,
-            isMine = userId == senderId,
-            contentType = Message.ContentType.TEXT,
+            id = senderId, // same as above
+            isMine = currentUserId == senderId,
+            contentType = when (messageType) {
+                "text" -> Message.ContentType.TEXT
+                "image" -> Message.ContentType.IMAGE
+                "video" -> Message.ContentType.VIDEO
+                else -> Message.ContentType.TEXT
+            },
             content = content,
             contentDescription = "",
-            timestamp = timestamp.toDateString(),
+            timestamp = timestamp.toDateString()
         )
     }
 
-    private fun Timestamp.toDateString(): String{
+    private fun Timestamp.toDateString(): String {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormatter.format(this.toDate())
+    }
 
-        // Create a SimpleDateFormat instance with the desired format and default Locale
-        val dateFormatter = SimpleDateFormat("dd/mm/yyyy HH:mm:ss", Locale.getDefault())
-
-        // Convert the Timestamp to a Date object
-        val date = toDate()
-
-        // Format the Date object into a string using the SimpleDateFormat
-        return dateFormatter.format(date)
-
+    fun FireStoreMessageModel.toDbMessage(chatId: String): com.packt.data.database.Message {
+        return com.packt.data.database.Message(
+            chatId = chatId,
+            id = this.senderId,
+            timestamp = this.timestamp.toDate().toString(),
+            contentType = this.messageType.uppercase(),
+            content = this.content,
+            contentDescription = ""
+        )
     }
 }

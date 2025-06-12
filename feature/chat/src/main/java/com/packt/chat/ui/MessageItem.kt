@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,37 +28,33 @@ import com.packt.framework.ui.Avatar
 
 @Composable
 fun MessageItem(message: Message) {
-
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isMine) {
-            Arrangement.End
-        } else {
-            Arrangement.Start
-        }
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        horizontalArrangement = if (message.isMine) Arrangement.End else Arrangement.Start
     ) {
+        // Show avatar if not from the current user
         if (!message.isMine) {
             Avatar(
                 imageUrl = message.senderAvatar,
                 size = 40.dp,
                 contentDescription = "${message.senderName}'s avatar"
             )
+            Spacer(modifier = Modifier.width(8.dp))
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
-
         Column {
-            if (message.isMine) {
-                Spacer(modifier = Modifier.height(8.dp))
-            } else {
+            if (!message.isMine) {
                 Text(
                     text = message.senderName,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             when (val content = message.messageContent) {
-
                 is MessageContent.TextMessage -> {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
@@ -75,7 +70,7 @@ fun MessageItem(message: Message) {
                             color = if (message.isMine) {
                                 MaterialTheme.colorScheme.onPrimary
                             } else {
-                                Color.White
+                                MaterialTheme.colorScheme.onSecondary
                             }
                         )
                     }
@@ -86,20 +81,23 @@ fun MessageItem(message: Message) {
                         model = content.imageUrl,
                         contentDescription = content.contentDescription,
                         modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape),
+                            .size(150.dp)
+                            .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop
                     )
                 }
 
+                is MessageContent.VideoMessage -> {
+                    // TODO: Handle video rendering
+                }
             }
 
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = message.timestamp,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                color = Color.Gray
             )
         }
-
     }
-
 }

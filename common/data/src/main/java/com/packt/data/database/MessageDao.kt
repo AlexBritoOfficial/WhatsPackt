@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MessageDao {
 
-    @Query("SELECT * FROM messages WHERE conversation_id = :conversation_id ORDER BY timestamp ASC")
+    @Query("SELECT * FROM messages WHERE id = :conversation_id ORDER BY timestamp ASC")
     fun getMessagesInConversation(conversation_id: Int): Flow<List<Message>>
 
     @Insert

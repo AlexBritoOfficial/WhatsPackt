@@ -4,9 +4,7 @@ import com.google.firebase.Timestamp
 import com.packt.chat.data.network.model.FireStoreMessageModel
 
 data class Message(
-    val id: String? = null,
-    val senderName: String = "",
-    val senderAvatar: String = "",
+    val id: String? = null, // This maps to senderId
     val timestamp: String? = null,
     val isMine: Boolean = false,
     val contentType: ContentType = ContentType.TEXT,
@@ -15,14 +13,15 @@ data class Message(
 ) {
 
     enum class ContentType {
-        TEXT, IMAGE
+        TEXT, IMAGE, VIDEO
     }
 
     fun toFireStoreMessageModel(): FireStoreMessageModel {
         return FireStoreMessageModel(
-            id = id ?: "",
-            senderName = senderName,
-            senderAvatar = senderAvatar
+            senderId = id ?: "",
+            content = content,
+            messageType = contentType.name.lowercase(),
+            timestamp = Timestamp.now()
         )
     }
 }

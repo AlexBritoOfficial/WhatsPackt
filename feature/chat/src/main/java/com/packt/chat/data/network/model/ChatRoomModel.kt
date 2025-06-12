@@ -17,7 +17,7 @@ data class ChatRoomModel(
             id = id,
             senderName = senderName,
             senderAvatar = senderAvatar,
-            lastMessages = lastMessages.map { it.toDomain() }
+            lastMessages = lastMessages.map { it.toDomain() } // 👈 map each WebsocketMessageModel to domain.Message
         )
     }
 }
