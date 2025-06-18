@@ -35,7 +35,7 @@ fun SplashScreen(navigateToNewScreen: () -> Unit) {
 
     LaunchedEffect(Unit) {
         visible = true
-        delay(2000) // Show splash for 2 seconds
+        delay(3500) // Show splash for 2 seconds
         navigateToNewScreen()
     }
 
@@ -47,7 +47,7 @@ fun SplashScreen(navigateToNewScreen: () -> Unit) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                painter = painterResource(id = com.google.android.gms.base.R.drawable.common_full_open_on_phone),
+                painter = painterResource(id = R.drawable.whatspacktsplash),
                 contentDescription = "WhatsPackt Logo",
                 modifier = Modifier.fillMaxSize(),
                 tint = WhiteText
