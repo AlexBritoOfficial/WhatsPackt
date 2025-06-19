@@ -1,6 +1,5 @@
 package com.packt.chat.data.network.datasource
 
-import android.util.Log
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
