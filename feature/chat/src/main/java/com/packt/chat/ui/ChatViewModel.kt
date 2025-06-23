@@ -15,8 +15,9 @@ import com.packt.chat.ui.model.Chat
 import com.packt.chat.ui.model.Message
 import com.packt.chat.ui.model.MessageContent
 import com.packt.chat.ui.model.toUI
+import com.packt.domain.GetCurrentUserIdUseCase
+import com.packt.domain.GetUserDataUseCase
 import com.packt.chat.domain.models.Message as DomainMessage
-import com.packt.domain.user.GetUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,7 +38,8 @@ class ChatViewModel @Inject constructor(
     private val getInitialChatRoomInformation: GetInitialChatRoomInformation,
     private val insertMessageLocally: InsertMessageLocally,
     private val insertConversationLocally: InsertConversationLocally,
-    private val getUserData: GetUserData
+    private val getUserDataUseCase: GetUserDataUseCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
 ) : ViewModel() {
 
     companion object {
@@ -51,58 +53,41 @@ class ChatViewModel @Inject constructor(
     val uiState: StateFlow<Chat> = _uiState
 
     private var messageCollectionJob: Job? = null
-
     private lateinit var chatRoom: ChatRoom
+    private lateinit var userId: String
 
     fun loadAndObserveChat(chatId: String) {
         messageCollectionJob?.cancel()
         messageCollectionJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-                val user = getUserData.getData()
-                val userId = user.id
+                val currentUserId = getCurrentUserIdUseCase()
+                userId = currentUserId ?: throw IllegalStateException("User ID not available")
 
-                // Step 1: Load initial chat room
+                val user = getUserDataUseCase(userId)
+
                 chatRoom = getInitialChatRoomInformation(userId, chatId)
 
-                Log.d("ChatViewModel", "Updated UI state with: ${chatRoom.toUI()}")
-
-//                chatRoom.lastMessages.forEach { message ->
-//                    insertMessageLocally(
-//                        message = com.packt.data.database.Message(
-//                            id = chatId,
-//                            chatId = chatId,// Auto-generated primary key, so 0 is fine // Pass the chat/conversation id
-//                            content = message.content,
-//                            contentType = message.contentType.toString(),
-//                            contentDescription = message.contentDescription,
-//                            timestamp = message.timestamp
-//                        )
-//                    )
-//                }
-
-
                 withContext(Dispatchers.Main) {
-                    Log.d("ChatViewModel", "Updated UI state with: ${chatRoom.toUI()}")
+                    Log.d(TAG, "Updated UI state with: ${'$'}{chatRoom.toUI()}")
                     _uiState.value = chatRoom.toUI()
                     _messages.value = chatRoom.lastMessages.map { it.toUi() }
                 }
 
-                // Step 2: Observe new messages
                 observeMessages(userId, chatId)
             } catch (e: Throwable) {
-                Log.e(TAG, "Failed to load chat: ${e.localizedMessage}")
+                Log.e(TAG, "Failed to load chat: ${'$'}{e.localizedMessage}")
             }
         }
     }
 
     private suspend fun observeMessages(userId: String, chatId: String) {
-
         observeMessages.invoke(userId = userId, chatId = chatId).collect { newMessage ->
-            Log.d(TAG, "New message received: $newMessage")
+            Log.d(TAG, "New message received: ${'$'}newMessage")
 
             insertMessageLocally(
                 message = com.packt.data.database.Message(
-                    id = chatId,
-                    chatId = chatId,// Auto-generated primary key, so 0 is fine // Pass the chat/conversation id
+                    id = newMessage.id ?: "",
+                    chatId = chatId,
                     content = newMessage.content,
                     contentType = newMessage.contentType.toString(),
                     contentDescription = newMessage.contentDescription,
@@ -118,13 +103,12 @@ class ChatViewModel @Inject constructor(
 
     fun onSendMessage(messageText: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = getUserData.getData()
-
-            val timestamp = Timestamp.now()
+            val currentUserId = getCurrentUserIdUseCase()
+            val uid = currentUserId ?: return@launch
 
             val message = DomainMessage(
-                id = user.id, // maps to senderId in Firestore
-                timestamp = timestamp.toDate().time.toString(), // store as string in domain, Firestore will use Timestamp
+                id = uid,
+                timestamp = Timestamp.now().toDate().time.toString(),
                 isMine = true,
                 contentType = DomainMessage.ContentType.TEXT,
                 content = messageText,
@@ -134,7 +118,6 @@ class ChatViewModel @Inject constructor(
             sendMessage(chatId = chatRoom.id, message)
         }
     }
-
 
     override fun onCleared() {
         messageCollectionJob?.cancel()
@@ -157,14 +140,8 @@ class ChatViewModel @Inject constructor(
     private fun DomainMessage.getMessageContent(): MessageContent {
         return when (contentType) {
             DomainMessage.ContentType.TEXT -> MessageContent.TextMessage(content)
-            DomainMessage.ContentType.VIDEO -> MessageContent.VideoMessage(
-                content,
-                contentDescription
-            )
-            DomainMessage.ContentType.IMAGE -> MessageContent.ImageMessage(
-                content,
-                contentDescription
-            )
+            DomainMessage.ContentType.VIDEO -> MessageContent.VideoMessage(content, contentDescription)
+            DomainMessage.ContentType.IMAGE -> MessageContent.ImageMessage(content, contentDescription)
         }
     }
 }

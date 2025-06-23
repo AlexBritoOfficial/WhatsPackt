@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.packt.conversations.ui.mapper.toUiModel
 import com.packt.conversations.ui.state.ConversationsUiState
+import com.packt.domain.GetCurrentUserIdUseCase
+import com.packt.domain.GetUserDataUseCase
 import data.network.dto.FirestoreConversationModel
-import com.packt.domain.user.GetUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import domain.GetAllConversations
 import kotlinx.coroutines.Job
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConversationsViewModel @Inject constructor(private val getAllConversations: GetAllConversations,
-                                                 private val getUserData: GetUserData): ViewModel() {
+                                                 private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase): ViewModel() {
 
     private val _conversations = MutableStateFlow<List<FirestoreConversationModel>>(emptyList())
     val conversations: StateFlow<List<FirestoreConversationModel>> = _conversations
@@ -28,7 +29,7 @@ class ConversationsViewModel @Inject constructor(private val getAllConversations
 
     fun getConversations(){
         messageCollectionJob = viewModelScope.launch {
-            _conversations.value = getAllConversations(getUserData.getData().id)
+            _conversations.value = getAllConversations(getCurrentUserIdUseCase())
         }
 
     }
