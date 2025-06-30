@@ -77,8 +77,8 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.whatspacktsplash),
+
+        Icon(painter = painterResource(id = R.drawable.whatspacktsplash),
             contentDescription = "WhatsPackt Logo",
             tint = WhiteText,
             modifier = Modifier.size(100.dp)

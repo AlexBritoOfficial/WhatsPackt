@@ -1,50 +1,110 @@
+package com.packt.create_chat.ui
+
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.packt.framework.ui.theme.BlueButton
+import com.packt.framework.ui.theme.RedBackground
+import com.packt.framework.ui.theme.WhiteText
+import com.packt.whatspackt.R
 
 @Composable
 fun StartNewConversationScreen(
-    viewModel: StartNewConversationViewModel = hiltViewModel(),
-   // onConversationCreated: (String) -> Unit // conversationId
+    onStartChat: (String) -> Unit
 ) {
-    var userName by remember { mutableStateOf("") }
-    val context = LocalContext.current
+    var username by remember { mutableStateOf("") }
+    val isUsernameValid = username.trim().isNotEmpty()
 
-    Column(modifier = Modifier.padding(24.dp)) {
-        OutlinedTextField(
-            value = userName,
-            onValueChange = { userName = it },
-            label = { Text("Recipient Username") },
-            modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(RedBackground)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.whatspacktsplash),
+            contentDescription = "WhatsPackt Logo",
+            tint = WhiteText,
+            modifier = Modifier
+                .size(300.dp)
+                .padding(24.dp)
         )
+
+        // 🏷️ Title
+        Text(
+            text = "Start New Conversation",
+            style = MaterialTheme.typography.headlineSmall,
+            color = WhiteText
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            if (userName.isNotBlank()) {
-//                viewModel.startConversation(userName.trim(),
-//                    onSuccess = { conversationId ->
-//                        onConversationCreated(conversationId)
-//                    },
-//                    onError = { error ->
-//                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-//                    }
-//                )
-            }
-        }) {
-            Text("Create Chat")
+
+        // 🔤 Username Field
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Enter Username") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (isUsernameValid) onStartChat(username.trim())
+                }
+            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = WhiteText,
+                unfocusedTextColor = WhiteText,
+                focusedBorderColor = WhiteText,
+                unfocusedBorderColor = WhiteText,
+                focusedLabelColor = WhiteText,
+                unfocusedLabelColor = WhiteText,
+                cursorColor = WhiteText
+            )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { onStartChat(username.trim()) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BlueButton,   // ✅ Blue background
+                contentColor = WhiteText       // ✅ White text
+            )
+        ) {
+            Text("Start Chat")
         }
     }
 }
+
