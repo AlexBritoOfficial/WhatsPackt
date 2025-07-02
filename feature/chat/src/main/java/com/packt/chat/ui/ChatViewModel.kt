@@ -63,8 +63,6 @@ class ChatViewModel @Inject constructor(
                 val currentUserId = getCurrentUserIdUseCase()
                 userId = currentUserId ?: throw IllegalStateException("User ID not available")
 
-                val user = getUserDataUseCase(userId)
-
                 chatRoom = getInitialChatRoomInformation(userId, chatId)
 
                 withContext(Dispatchers.Main) {
@@ -84,16 +82,16 @@ class ChatViewModel @Inject constructor(
         observeMessages.invoke(userId = userId, chatId = chatId).collect { newMessage ->
             Log.d(TAG, "New message received: ${'$'}newMessage")
 
-            insertMessageLocally(
-                message = com.packt.data.database.Message(
-                    id = newMessage.id ?: "",
-                    chatId = chatId,
-                    content = newMessage.content,
-                    contentType = newMessage.contentType.toString(),
-                    contentDescription = newMessage.contentDescription,
-                    timestamp = newMessage.timestamp!!
-                )
-            )
+//            insertMessageLocally(
+//                message = com.packt.data.database.Message(
+//                    id = newMessage.id ?: "",
+//                    chatId = chatId,
+//                    content = newMessage.content,
+//                    contentType = newMessage.contentType.toString(),
+//                    contentDescription = newMessage.contentDescription,
+//                    timestamp = newMessage.timestamp!!
+//                )
+//            )
 
             withContext(Dispatchers.Main) {
                 _messages.update { current -> current + newMessage.toUi() }

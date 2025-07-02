@@ -1,6 +1,8 @@
 package data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
+import com.packt.domain.user.UserData
 import data.network.FirebaseAuthService
 import domain.AuthRepository
 import kotlinx.coroutines.tasks.await
@@ -37,25 +39,8 @@ class AuthRepositoryImpl @Inject constructor(
 
 
 
-    override suspend fun loginWithUsername(username: String, password: String): Result<String> {
-        return try {
-            val querySnapshot = firestore.collection("users")
-                .whereEqualTo("username", username)
-                .get()
-                .await()
-
-            if (querySnapshot.isEmpty) {
-                return Result.failure(Exception("Username not found"))
-            }
-
-            val email = querySnapshot.documents.first().getString("email")
-                ?: return Result.failure(Exception("Email missing for user"))
-
-            val authResult = authService.loginWithEmail(email, password)
-            authResult.map { it.user?.uid ?: throw Exception("UID not found") }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun loginWithUsername(username: String, password: String): Result<UserData> {
+        return authService.loginWithUsername(username, password)
     }
 
 

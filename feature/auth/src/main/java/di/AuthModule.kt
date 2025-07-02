@@ -17,8 +17,8 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAuthService(auth: FirebaseAuth): FirebaseAuthService =
-        FirebaseAuthService(auth)
+    fun provideFirebaseAuthService(auth: FirebaseAuth, firestore: FirebaseFirestore): FirebaseAuthService =
+        FirebaseAuthService(auth, firestore)
 
     @Provides
     @Singleton
