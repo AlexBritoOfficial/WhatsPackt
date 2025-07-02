@@ -9,6 +9,7 @@ import com.packt.chat.domain.models.Message
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FireStoreMessagesDataSource @Inject constructor(private val firestore: FirebaseFirestore) {
@@ -73,6 +74,32 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
         }
 
 
+//    fun observeMessages(userId: String, chatId: String): Flow<Message> = callbackFlow {
+//        val chatReference = firestore.collection("chats")
+//            .document(chatId)
+//            .collection("messages")
+//            .orderBy("timestamp", Query.Direction.ASCENDING)
+//
+//        val listenerRegistration = chatReference.addSnapshotListener { snapshot, error ->
+//            if (error != null) {
+//                close(error)
+//                return@addSnapshotListener
+//            }
+//
+//            if (snapshot != null) {
+//                for (change in snapshot.documentChanges) {
+//                    if (change.type == DocumentChange.Type.ADDED) {
+//                        val fireStoreMsg = change.document.toObject(FireStoreMessageModel::class.java)
+//                        val domainMsg = fireStoreMsg.toMessageDomain(currentUserId = userId)
+//                        trySend(domainMsg)
+//                    }
+//                }
+//            }
+//        }
+//
+//        awaitClose { listenerRegistration.remove() }
+//    }
+
     fun observeMessages(userId: String, chatId: String): Flow<Message> = callbackFlow {
 
         // Create a reference to the "chats" collection in Firestore,
@@ -117,6 +144,8 @@ class FireStoreMessagesDataSource @Inject constructor(private val firestore: Fir
             listenerRegistration.remove()
         }
     }
+
+
 
     fun sendMessage(chatId: String, message: Message) {
 
