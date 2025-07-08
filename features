@@ -1,0 +1,46 @@
+common/
+    ├── data
+    ├── domain
+        ├──user
+            └── GetUserData.kt
+            └── UserData.kt
+    ├── framework
+
+
+
+features/
+    ├── chat/
+    ├── conversations/
+    ├── create_chat/
+            ├──ui
+            ├──domain
+                ├──use cases
+            ├──data
+            ├──di
+    ├── auth/
+        ├──ui/
+            └── LogInScreen.kt
+        ├──domain/
+            ├──use cases/
+                └── IsUserLoggedInUseCase.kt
+                └── LoginWithEmailUseCase.kt
+                └── LogoutUseCase.kt
+                └── RegisterWithEmailUseCase
+        └── AuthRepository.kt
+        ├──data/
+            ├──
+                └── FirebaseAuthService.kt
+            ├──repository/
+                └── AuthRepositoryImpl.kt
+        ├──di/
+    ├── splash/
+    ├── onboarding/
+        ├──ui
+        ├──domain
+        ├──data
+        ├──di
+    ├── profile/
+    ├── media/
+    ├── notifications/
+    ├── search/
+    ├── settings/

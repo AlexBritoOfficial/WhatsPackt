@@ -1,4 +1,4 @@
-package com.packt.whatspackt.ui.theme
+package com.packt.framework.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -7,21 +7,18 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val RedBackground = Color(0xFFFF0000)
-val WhiteText = Color(0xFFFFFFFF)
-
 private val DarkColorScheme = darkColorScheme(
-    primary = RedBackground,
+    primary = BlueButton,
     onPrimary = WhiteText,
-    background = RedBackground,
-    onBackground = WhiteText
+    background = WhiteText,
+    onBackground = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = RedBackground,
+    primary = BlueButton,
     onPrimary = WhiteText,
-    background = RedBackground,
-    onBackground = WhiteText
+    background = WhiteText,
+    onBackground = Color.Black
 )
 
 @Composable

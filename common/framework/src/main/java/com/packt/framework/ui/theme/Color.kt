@@ -1,4 +1,4 @@
- package com.packt.whatspackt.ui.theme
+package com.packt.framework.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

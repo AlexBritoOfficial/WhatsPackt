@@ -1,0 +1,31 @@
+Path: /chats/{chatId}
+    chatType: "direct" (string)
+    createdAt: June 4, 2025 at 2:54:29 AM UTC-4 (timestamp)
+    groupPhotoUrl: null (null)
+    lastMessage: "Hey, how are you?" (string)
+    lastMessageTimestamp: June 4, 2025 at 2:54:16 AM UTC-4 (timestamp)
+    participantMeta: (map)
+    participants: 0 -> "fcELsPmQgLEowVW7iiZg" (string),
+                  1 -> "r8QQH3vdq9PuJaQkWLt2" (string) (array)
+
+    title: "Alex & Baolan"
+    messages: (sub-collection)
+
+        content: "Bao, did you get my message?" (string)
+        messageType: "text" (string)
+        senderId: "fcELsPmQgLEowVW7iiZg" (string)
+        timestamp: June 4, 2025 at 2:01:40 AM UTC-4
+
+Path: /users
+    document: fcELsPmQgLEowVW7iiZg
+        userId: (firebase generated)
+        avatarUrl: (string)
+        bio: (string)
+        createdAt: (timestamp)
+        displayName: (string)
+        email: (string)
+        lastActive: (timestamp)
+        phone:(string)
+        status:(string)
+        username:(string)
+        searchKeywords: (array)
