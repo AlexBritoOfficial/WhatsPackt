@@ -17,7 +17,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -53,6 +53,9 @@ dependencies {
     implementation(project(":feature:create_chat"))
     implementation(project(":feature:conversations"))
     implementation(project(":feature:chat"))
+    implementation(project(":feature:splash"))
+    implementation(project(":feature:onboarding"))
+    implementation(project(":feature:auth"))
 
 
     implementation(libs.androidx.core.ktx)
@@ -87,5 +90,6 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:24.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.1")
 
+    implementation (libs.androidx.vectordrawable)
 
 }

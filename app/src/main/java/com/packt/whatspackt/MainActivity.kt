@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.packt.framework.ui.theme.WhatsPacktTheme
 import com.packt.whatspackt.ui.navigation.MainNavigation
-import com.packt.whatspackt.ui.theme.WhatsPacktTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
