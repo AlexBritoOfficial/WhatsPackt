@@ -1,5 +1,6 @@
 package com.packt.whatspackt.ui.navigation
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -19,7 +20,10 @@ import com.packt.login.ui.RegisterScreen
 import com.packt.login.ui.viewmodel.LogInViewModel
 import com.packt.onboarding.ui.OnboardingPage
 import com.packt.onboarding.ui.OnboardingScreen
+import com.packt.profile.ProfileScreen
 import com.packt.splash.ui.SplashScreen
+import ui.ProfileViewModel
+import ui.state.UserDataState
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -33,6 +37,7 @@ fun MainNavigation(navController: NavHostController) {
         addLogInScreen(navController)
         addRegisterScreen(navController)
         addConversationList(navController)
+        addCreateProfile(navController)
         addNewConversation(navController)
         addChat(navController)
     }
@@ -102,9 +107,19 @@ private fun NavGraphBuilder.addConversationList(navController: NavHostController
             },
             onConversationClick = { chatId ->
                 navController.navigate(NavRoutes.Chat.replace("{chatId}", chatId))
+            },
+            onProfileClick = {
+                navController.navigate(NavRoutes.Profile)
             }
         )
     }
+}
+
+private fun NavGraphBuilder.addCreateProfile(navController: NavHostController) {
+    composable(route = NavRoutes.Profile) {
+        ProfileScreen()
+    }
+
 }
 
 private fun NavGraphBuilder.addNewConversation(navController: NavHostController) {
