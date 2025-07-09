@@ -8,4 +8,5 @@ interface UserRepository {
     val currentUserData: StateFlow<UserData?>
     suspend fun setCurrentUserData(userData: UserData)
     fun clearCurrentUserData()
+    suspend fun updateUserData(userData: UserData): Result<Unit>
 }
