@@ -1,15 +1,13 @@
 package com.packt.domain.user
 
+import com.google.firebase.Timestamp
+
+
 data class UserData(
     val id: String,
     val avatarUrl: String,
     val displayName: String,
-    val lastActive: Long,
+    val lastActive: Timestamp,
     val status: String,
-    val username: String,
-    val phone: String,
-    val bio: String,
-    val createdAt: Long,
-    val email: String,
-    val searchKeywords: List<String>
+    val username: String
 )

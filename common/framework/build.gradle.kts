@@ -70,7 +70,4 @@ dependencies {
     api(libs.firebase.auth)
     api(libs.google.firebase.analytics)
     api(libs.firebase.storage.ktx)
-
-    implementation(libs.accompanist.pager.v0360)
-    implementation (libs.accompanist.pager.indicators)
 }
