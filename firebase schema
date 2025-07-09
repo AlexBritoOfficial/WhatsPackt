@@ -19,13 +19,13 @@ Path: /chats/{chatId}
 Path: /users
     document: fcELsPmQgLEowVW7iiZg
         userId: (firebase generated)
-        avatarUrl: (string)
-        bio: (string)
-        createdAt: (timestamp)
-        displayName: (string)
-        email: (string)
-        lastActive: (timestamp)
-        phone:(string)
-        status:(string)
-        username:(string)
-        searchKeywords: (array)
+        avatarUrl: (string) Check
+        bio: (string) Bio
+        createdAt: (timestamp) Created
+        displayName: (string) Check
+        email: (string) Email
+        lastActive: (timestamp) Last Active
+        phone:(string) Phone
+        status:(string) Check
+        username:(string) Check
+        searchKeywords: (array) Search Keywords

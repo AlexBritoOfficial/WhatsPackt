@@ -1,5 +1,6 @@
 package com.packt.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,12 +32,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import ui.ProfileViewModel
@@ -50,6 +53,23 @@ fun ProfileScreen(
     val state by viewModel.currentUser.collectAsState()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val headerHeight = screenHeight / 4
+    val context = LocalContext.current
+
+    // React to state changes
+    LaunchedEffect(state) {
+        when (state) {
+            is UserDataState.Success -> {
+                Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+            }
+            is UserDataState.Error -> {
+                val message = (state as UserDataState.Error).message
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // No toast needed
+            }
+        }
+    }
 
     when (state) {
         is UserDataState.Loading -> {
@@ -220,7 +240,13 @@ fun ProfileScreen(
 
                 Button(
                     onClick = {
-                        // TODO: Implement update logic here
+                        viewModel.updateProfile(
+                            bio = bioState.value,
+                            status = statusState.value,
+                            email = emailState.value,
+                            phone = phoneState.value,
+                            keywords = keywordsState.value
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()

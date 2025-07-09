@@ -31,5 +31,20 @@ class FirebaseUserService @Inject constructor(
     fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
+
+    suspend fun updateUserData(userData: UserData): Result<Unit> {
+        return try {
+            val firestoreModel = FirestoreUserModel.fromDomain(userData)
+            firestore
+                .collection("users")
+                .document(userData.id)
+                .set(firestoreModel)
+                .await()  // if you're using kotlinx-coroutines-play-services
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
+
 

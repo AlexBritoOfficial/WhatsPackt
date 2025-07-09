@@ -37,4 +37,8 @@ class UserRepositoryImpl @Inject constructor(
     override fun clearCurrentUserData() {
         _currentUserData.value = null
     }
+
+    override suspend fun updateUserData(userData: UserData): Result<Unit> {
+        return userService.updateUserData(userData)
+    }
 }
