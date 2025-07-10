@@ -13,8 +13,12 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -25,6 +29,11 @@ fun OnboardingScreen(
 ) {
     val pagerState = rememberPagerState(pageCount = { onboardingPages.size }, initialPage = 0)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        LastRouteDataStore.saveLastRoute(context, NavRoutes.Onboarding)
+    }
 
     Column(
         modifier = modifier

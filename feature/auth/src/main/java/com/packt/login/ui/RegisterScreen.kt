@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 import com.packt.framework.ui.theme.BlueButton
 import com.packt.framework.ui.theme.RedBackground
 import com.packt.framework.ui.theme.WhiteText
@@ -45,6 +48,11 @@ fun RegisterScreen(viewModel: RegisterViewModel = hiltViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val registerState by viewModel.registerState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        LastRouteDataStore.saveLastRoute(context, NavRoutes.RegisterScreen)
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),

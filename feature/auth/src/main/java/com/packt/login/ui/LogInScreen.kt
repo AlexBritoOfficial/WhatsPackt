@@ -38,6 +38,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 import com.packt.framework.ui.theme.BlueButton
 import com.packt.login.ui.viewmodel.LogInViewModel
 
@@ -53,6 +55,13 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+
+    // Save the current screen as last visited if not logged in
+    if (loginState !is LoginState.Success) {
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.LogInScreen)
+        }
+    }
 
     // Trigger navigation on successful login
     if (loginState is LoginState.Success) {
@@ -78,7 +87,8 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Icon(painter = painterResource(id = R.drawable.whatspacktsplash),
+        Icon(
+            painter = painterResource(id = R.drawable.whatspacktsplash),
             contentDescription = "WhatsPackt Logo",
             tint = WhiteText,
             modifier = Modifier.size(100.dp)

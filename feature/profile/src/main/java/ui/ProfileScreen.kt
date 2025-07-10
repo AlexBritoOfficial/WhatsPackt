@@ -42,6 +42,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 import ui.ProfileViewModel
 import ui.state.UserDataState
 
@@ -55,8 +57,10 @@ fun ProfileScreen(
     val headerHeight = screenHeight / 4
     val context = LocalContext.current
 
+
     // React to state changes
     LaunchedEffect(state) {
+        LastRouteDataStore.saveLastRoute(context, NavRoutes.Profile)
         when (state) {
             is UserDataState.Success -> {
                 Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
@@ -133,7 +137,7 @@ fun ProfileScreen(
                         Image(
                             painter = rememberAsyncImagePainter(
                                 model = if (userData.avatarUrl.isNotBlank()) userData.avatarUrl
-                                else "https://i.pravatar.cc/150?u=${userData.id}"
+                                else ""
                             ),
                             contentDescription = "User Avatar",
                             contentScale = ContentScale.Crop,

@@ -72,5 +72,10 @@ dependencies {
     api(libs.firebase.storage.ktx)
 
     implementation(libs.accompanist.pager.v0360)
-    implementation (libs.accompanist.pager.indicators)
+    implementation(libs.accompanist.pager.indicators)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+
 }
