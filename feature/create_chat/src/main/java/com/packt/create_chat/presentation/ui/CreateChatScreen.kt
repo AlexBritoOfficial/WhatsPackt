@@ -30,12 +30,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.packt.framework.ui.theme.RedBackground
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.currentCompositionErrors
+import androidx.compose.ui.platform.LocalContext
 import com.packt.create_chat.R
 import com.packt.create_chat.presentation.state.CreateChatUiState
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 import com.packt.framework.ui.theme.BlueButton
 import com.packt.framework.ui.theme.WhiteText
 
@@ -51,6 +55,11 @@ fun CreateChatScreen(
 
     val uiState = viewModel.uiState.collectAsState().value
     val currentUser = viewModel.currentUserData.collectAsState().value
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        LastRouteDataStore.saveLastRoute(context, NavRoutes.NewConversation)
+    }
 
     Column(
         modifier = Modifier

@@ -2,6 +2,10 @@ package com.packt.whatspackt.ui.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -14,6 +18,7 @@ import com.packt.chat.ui.ChatScreen
 import com.packt.conversations.ui.ConversationListScreen
 import com.packt.create_chat.presentation.ui.CreateChatScreen
 import com.packt.framework.navigation.DeepLinks
+import com.packt.framework.navigation.LastRouteDataStore
 import com.packt.framework.navigation.NavRoutes
 import com.packt.login.ui.LoginScreen
 import com.packt.login.ui.RegisterScreen
@@ -45,15 +50,31 @@ fun MainNavigation(navController: NavHostController) {
 
 private fun NavGraphBuilder.addSplashScreen(navController: NavHostController) {
     composable(route = NavRoutes.SplashScreen) {
+        val context = LocalContext.current
+        val lastRoute by LastRouteDataStore.getLastRoute(context).collectAsState(initial = null)
+
         SplashScreen {
-            navController.popBackStack() // Remove Splash from back stack
-            navController.navigate(NavRoutes.Onboarding) // Navigate to Onboarding first
+            navController.popBackStack()
+            if (lastRoute.isNullOrEmpty()) {
+                navController.navigate(NavRoutes.Onboarding)
+            } else {
+                navController.navigate(lastRoute!!)
+            }
         }
     }
 }
 
 fun NavGraphBuilder.addOnboardingNavGraph(navController: NavHostController, onDone: () -> Unit) {
+
+
     composable(route = NavRoutes.Onboarding) {
+
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.Onboarding)
+        }
+
         val samplePages = listOf(
             OnboardingPage(
                 title = "Welcome to WhatsPackt",
@@ -76,7 +97,15 @@ fun NavGraphBuilder.addOnboardingNavGraph(navController: NavHostController, onDo
 }
 
 private fun NavGraphBuilder.addLogInScreen(navController: NavHostController) {
+
     composable(route = NavRoutes.LogInScreen) {
+
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.LogInScreen)
+        }
+
         val viewModel: LogInViewModel = hiltViewModel() // or obtain your ViewModel instance here
 
         LoginScreen(
@@ -95,12 +124,24 @@ private fun NavGraphBuilder.addLogInScreen(navController: NavHostController) {
 
 private fun NavGraphBuilder.addRegisterScreen(navController: NavHostController) {
     composable(route = NavRoutes.RegisterScreen) {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.RegisterScreen)
+        }
+
         RegisterScreen()
     }
 }
 
 private fun NavGraphBuilder.addConversationList(navController: NavHostController) {
     composable(route = NavRoutes.ConversationsList) {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.ConversationsList)
+        }
+
         ConversationListScreen(
             onNewConversationClick = {
                 navController.navigate(NavRoutes.NewConversation)
@@ -117,6 +158,12 @@ private fun NavGraphBuilder.addConversationList(navController: NavHostController
 
 private fun NavGraphBuilder.addCreateProfile(navController: NavHostController) {
     composable(route = NavRoutes.Profile) {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.Profile)
+        }
+
         ProfileScreen()
     }
 
@@ -124,6 +171,12 @@ private fun NavGraphBuilder.addCreateProfile(navController: NavHostController) {
 
 private fun NavGraphBuilder.addNewConversation(navController: NavHostController) {
     composable(route = NavRoutes.NewConversation) {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            LastRouteDataStore.saveLastRoute(context, NavRoutes.NewConversation)
+        }
+
         CreateChatScreen(onStartChat = { chatId ->
             navController.navigate(NavRoutes.Chat.replace("{chatId}", chatId))
         })
@@ -141,6 +194,15 @@ private fun NavGraphBuilder.addChat(navController: NavHostController) {
         )
     ) { backStackEntry ->
         val chatId = backStackEntry.arguments?.getString(NavRoutes.ChatArgs.ChatId)
+
+        val context = LocalContext.current
+
+        LaunchedEffect(chatId) {
+            if (!chatId.isNullOrEmpty()) {
+                val resolvedRoute = NavRoutes.Chat.replace("{chatId}", chatId)
+                LastRouteDataStore.saveLastRoute(context, resolvedRoute)
+            }
+        }
         ChatScreen(chatId = chatId ?: "", onBack = {
             navController.popBackStack()
         })

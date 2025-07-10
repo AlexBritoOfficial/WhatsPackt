@@ -18,8 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.packt.framework.navigation.LastRouteDataStore
+import com.packt.framework.navigation.NavRoutes
 
 import com.packt.framework.ui.theme.RedBackground
 import com.packt.framework.ui.theme.WhiteText
@@ -35,7 +38,7 @@ fun SplashScreen(navigateToNewScreen: () -> Unit) {
 
     LaunchedEffect(Unit) {
         visible = true
-        delay(3500) // Show splash for 2 seconds
+        kotlinx.coroutines.delay(3500)
         navigateToNewScreen()
     }
 
