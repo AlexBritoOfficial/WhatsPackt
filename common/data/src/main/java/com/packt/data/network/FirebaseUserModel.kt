@@ -3,7 +3,7 @@ package com.packt.data.network
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 import com.packt.data.model.UserDataEntity
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 
 data class FirestoreUserModel(
 

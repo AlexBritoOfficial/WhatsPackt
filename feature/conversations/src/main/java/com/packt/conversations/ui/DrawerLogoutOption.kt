@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,27 +16,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
-fun DrawerProfileOption(
-    onProfileClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun DrawerLogoutOption(onLogoutClick: () -> Unit) {
+
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable { onProfileClick() }
+            .clickable { onLogoutClick() }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Profile"
+            imageVector = Icons.Default.ExitToApp,
+            contentDescription = "Logout"
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = "Profile",
+            text = "Logout",
             style = MaterialTheme.typography.bodyLarge
         )
     }
+
 }

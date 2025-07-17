@@ -1,6 +1,6 @@
 package domain.usecase
 
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 import domain.AuthRepository
 import javax.inject.Inject
 

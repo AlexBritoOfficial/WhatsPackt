@@ -1,6 +1,6 @@
 package ui.state
 
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 
 sealed class UserDataState {
     object Loading : UserDataState()

@@ -2,15 +2,17 @@ package com.packt.conversations.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.packt.conversations.ui.mapper.toUiModel
 import com.packt.conversations.ui.state.ConversationsUiState
 import com.packt.conversations.ui.state.UserDataState
 import com.packt.domain.GetCurrentUserIdUseCase
 import com.packt.domain.GetUserDataUseCase
-import com.packt.domain.user.UserData
+import com.packt.domain.LogoutUserUseCase
+import com.packt.domain.ObserveAuthStatusUseCase
+import com.packt.domain.model.AuthStatus
 import data.network.dto.FirestoreConversationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import domain.GetAllConversations
+import domain.PrivateConversation
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +23,9 @@ import javax.inject.Inject
 class ConversationsViewModel @Inject constructor(
     private val getAllConversations: GetAllConversations,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
-    private val getUserDataUseCase: GetUserDataUseCase
+    private val getUserDataUseCase: GetUserDataUseCase,
+    private val observeAuthStatusUseCase: ObserveAuthStatusUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase
 ) : ViewModel() {
 
     private val _conversations = MutableStateFlow<List<FirestoreConversationModel>>(emptyList())
@@ -35,7 +39,11 @@ class ConversationsViewModel @Inject constructor(
 
     private lateinit var messageCollectionJob: Job
 
+    private val _authState = MutableStateFlow<AuthStatus>(AuthStatus.Authenticated)
+    val authState: StateFlow<AuthStatus> = _authState
+
     init {
+        observeAuthStatus()
         loadCurrentUserAndConversations()
     }
 
@@ -67,6 +75,24 @@ class ConversationsViewModel @Inject constructor(
                 _uiState.value = ConversationsUiState.Success
             } catch (e: Exception) {
                 _uiState.value = ConversationsUiState.Error(e.message ?: "Failed to load conversations")
+            }
+        }
+    }
+
+    private fun observeAuthStatus() {
+        viewModelScope.launch {
+            observeAuthStatusUseCase().collect { authStatus ->
+                _authState.value = authStatus
+            }
+        }
+    }
+
+    fun logout(){
+        viewModelScope.launch {
+            logoutUserUseCase()
+
+            observeAuthStatusUseCase().collect { authStatus ->
+                _authState.value = authStatus
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.packt.data.di
 
 import com.packt.data.repository.UserRepositoryImpl
-import com.packt.domain.user.UserRepository
+import com.packt.domain.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

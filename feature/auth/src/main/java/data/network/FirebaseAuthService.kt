@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.packt.data.network.FirestoreUserModel
 import com.packt.data.toDomain
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
