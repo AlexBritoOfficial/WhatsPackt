@@ -3,14 +3,16 @@ package com.packt.data.repository
 
 import com.packt.data.network.FirebaseUserService
 import com.packt.data.toDomain
-import com.packt.domain.user.UserData
-import com.packt.domain.user.UserRepository
+import com.packt.domain.model.AuthStatus
+import com.packt.domain.model.UserData
+import com.packt.domain.UserRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val userService: FirebaseUserService
+    private val firebaseUserService: FirebaseUserService
 ) : UserRepository {
 
     // Backing flow to hold the current user
@@ -19,7 +21,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUserData(uid: String): Result<UserData> {
         return try {
-            val entity = userService.getUserData(uid)
+            val entity = firebaseUserService.getUserData(uid)
             Result.success(entity.toDomain())
         } catch (e: Exception) {
             Result.failure(e)
@@ -27,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getCurrentUserId(): String? {
-        return userService.getCurrentUserId()
+        return firebaseUserService.getCurrentUserId()
     }
 
     override suspend fun setCurrentUserData(userData: UserData) {
@@ -39,6 +41,14 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUserData(userData: UserData): Result<Unit> {
-        return userService.updateUserData(userData)
+        return firebaseUserService.updateUserData(userData)
+    }
+
+    override fun observeAuthStatus(): Flow<AuthStatus> {
+        return firebaseUserService.observeAuthStatus()
+    }
+
+    override suspend fun logout() {
+        firebaseUserService.logout()
     }
 }

@@ -1,7 +1,6 @@
 package domain
 
-import com.google.firebase.auth.AuthResult
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 
 interface AuthRepository {
     suspend fun registerWithEmail(email: String, password: String, username: String): Result<Boolean>

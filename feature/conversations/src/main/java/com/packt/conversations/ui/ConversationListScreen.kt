@@ -1,5 +1,6 @@
 package com.packt.conversations.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -30,19 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.packt.conversations.ui.state.UserDataState
 import com.packt.framework.navigation.LastRouteDataStore
 import com.packt.framework.navigation.NavRoutes
-import com.packt.framework.ui.Avatar
-import com.packt.whatspackt.feature.conversations.R
 import kotlinx.coroutines.launch
-import model.Conversation
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +47,10 @@ fun ConversationListScreen(
     onConversationClick: (chatId: String) -> Unit,
     onProfileClick: () -> Unit
 ) {
+
+    BackHandler(enabled = true) {
+        // Do nothing, BackHandler will prevent us from exiting the app on Conversations List Screen
+    }
 
     val conversations by viewModel.conversations.collectAsStateWithLifecycle()
     val user by viewModel.currentUser.collectAsState()
@@ -83,9 +82,14 @@ fun ConversationListScreen(
 
                         HorizontalDivider()
 
-                        DrawerProfileOption(onClick = {
+                        DrawerProfileOption(onProfileClick = {
                             onProfileClick()
                         })
+
+                        DrawerLogoutOption(onLogoutClick = {
+                            viewModel.logout()
+                        })
+
                     }
 
                     is UserDataState.Loaded -> TODO()

@@ -1,8 +1,7 @@
 package data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 import data.network.FirebaseAuthService
 import domain.AuthRepository
 import kotlinx.coroutines.tasks.await

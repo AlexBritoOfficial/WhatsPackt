@@ -1,6 +1,5 @@
 package com.packt.whatspackt.ui.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,7 +15,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.packt.chat.ui.ChatScreen
 import com.packt.conversations.ui.ConversationListScreen
+import com.packt.conversations.ui.ConversationsViewModel
 import com.packt.create_chat.presentation.ui.CreateChatScreen
+import com.packt.domain.model.AuthStatus
 import com.packt.framework.navigation.DeepLinks
 import com.packt.framework.navigation.LastRouteDataStore
 import com.packt.framework.navigation.NavRoutes
@@ -27,8 +28,7 @@ import com.packt.onboarding.ui.OnboardingPage
 import com.packt.onboarding.ui.OnboardingScreen
 import com.packt.profile.ProfileScreen
 import com.packt.splash.ui.SplashScreen
-import ui.ProfileViewModel
-import ui.state.UserDataState
+
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -65,10 +65,7 @@ private fun NavGraphBuilder.addSplashScreen(navController: NavHostController) {
 }
 
 fun NavGraphBuilder.addOnboardingNavGraph(navController: NavHostController, onDone: () -> Unit) {
-
-
     composable(route = NavRoutes.Onboarding) {
-
         val context = LocalContext.current
 
         LaunchedEffect(Unit) {
@@ -97,26 +94,25 @@ fun NavGraphBuilder.addOnboardingNavGraph(navController: NavHostController, onDo
 }
 
 private fun NavGraphBuilder.addLogInScreen(navController: NavHostController) {
-
     composable(route = NavRoutes.LogInScreen) {
-
         val context = LocalContext.current
 
         LaunchedEffect(Unit) {
             LastRouteDataStore.saveLastRoute(context, NavRoutes.LogInScreen)
         }
 
-        val viewModel: LogInViewModel = hiltViewModel() // or obtain your ViewModel instance here
+        val viewModel: LogInViewModel = hiltViewModel()
 
         LoginScreen(
             onLoginSuccess = {
                 navController.navigate(NavRoutes.ConversationsList) {
-                    popUpTo(NavRoutes.LogInScreen) { inclusive = true }
+                    popUpTo(0) // Clears entire back stack
+                    launchSingleTop = true
                 }
             },
             onSignUp = { navController.navigate(NavRoutes.RegisterScreen) },
             onLogin = { username, password ->
-                viewModel.login(username, password)  // Call the ViewModel login function
+                viewModel.login(username, password)
             }
         )
     }
@@ -137,11 +133,26 @@ private fun NavGraphBuilder.addRegisterScreen(navController: NavHostController) 
 private fun NavGraphBuilder.addConversationList(navController: NavHostController) {
     composable(route = NavRoutes.ConversationsList) {
         val context = LocalContext.current
+        val viewModel: ConversationsViewModel = hiltViewModel()
 
+        // Observe auth state from the ViewModel
+        val authStatus by viewModel.authState.collectAsState()
+
+        // Save the last visited route
         LaunchedEffect(Unit) {
             LastRouteDataStore.saveLastRoute(context, NavRoutes.ConversationsList)
         }
 
+        // Handle logout state by navigating to the login screen
+        LaunchedEffect(authStatus) {
+            if (authStatus == AuthStatus.Unauthenticated) {
+                navController.navigate(NavRoutes.LogInScreen) {
+                    popUpTo(NavRoutes.ConversationsList) { inclusive = true }
+                }
+            }
+        }
+
+        // UI for the conversation list screen
         ConversationListScreen(
             onNewConversationClick = {
                 navController.navigate(NavRoutes.NewConversation)
@@ -156,6 +167,7 @@ private fun NavGraphBuilder.addConversationList(navController: NavHostController
     }
 }
 
+
 private fun NavGraphBuilder.addCreateProfile(navController: NavHostController) {
     composable(route = NavRoutes.Profile) {
         val context = LocalContext.current
@@ -166,7 +178,6 @@ private fun NavGraphBuilder.addCreateProfile(navController: NavHostController) {
 
         ProfileScreen()
     }
-
 }
 
 private fun NavGraphBuilder.addNewConversation(navController: NavHostController) {

@@ -9,7 +9,7 @@ import com.packt.create_chat.domain.usecases.CreateChatUseCase
 import com.packt.create_chat.domain.usecases.GetParticipantIdUseCase
 import com.packt.domain.GetCurrentUserIdUseCase
 import com.packt.domain.GetUserDataUseCase
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 import domain.usecase.IsUserLoggedInUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

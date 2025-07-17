@@ -5,7 +5,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.packt.data.model.UserDataEntity
-import com.packt.domain.user.UserData
+import com.packt.domain.model.AuthStatus
+import com.packt.domain.model.UserData
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 
 class FirebaseUserService @Inject constructor(
@@ -44,6 +48,22 @@ class FirebaseUserService @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+     fun observeAuthStatus(): Flow<AuthStatus> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { auth ->
+            trySend(
+                if (auth.currentUser != null) AuthStatus.Authenticated
+                else AuthStatus.Unauthenticated
+            )
+        }
+
+        firebaseAuth.addAuthStateListener(listener)
+        awaitClose { firebaseAuth.removeAuthStateListener(listener) }
+    }
+
+    suspend fun logout(){
+        firebaseAuth.signOut()
     }
 }
 

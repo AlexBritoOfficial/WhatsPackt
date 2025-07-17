@@ -3,7 +3,7 @@ package com.packt.data
 
 import com.google.firebase.Timestamp
 import com.packt.data.model.UserDataEntity
-import com.packt.domain.user.UserData
+import com.packt.domain.model.UserData
 
 fun UserDataEntity.toDomain(): UserData = UserData(
     id = id,

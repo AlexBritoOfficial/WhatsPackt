@@ -1,5 +1,8 @@
-package com.packt.domain.user
+package com.packt.domain
 
+import com.packt.domain.model.AuthStatus
+import com.packt.domain.model.UserData
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
@@ -9,4 +12,6 @@ interface UserRepository {
     suspend fun setCurrentUserData(userData: UserData)
     fun clearCurrentUserData()
     suspend fun updateUserData(userData: UserData): Result<Unit>
+    fun observeAuthStatus(): Flow<AuthStatus>
+    suspend fun logout()
 }

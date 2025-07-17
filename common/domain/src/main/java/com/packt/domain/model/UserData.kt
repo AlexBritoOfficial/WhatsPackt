@@ -1,4 +1,4 @@
-package com.packt.domain.user
+package com.packt.domain.model
 
 data class UserData(
     val id: String,

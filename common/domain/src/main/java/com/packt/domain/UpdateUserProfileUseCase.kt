@@ -1,7 +1,6 @@
 package com.packt.domain
 
-import com.packt.domain.user.UserData
-import com.packt.domain.user.UserRepository
+import com.packt.domain.model.UserData
 import javax.inject.Inject
 
 class UpdateUserProfileUseCase @Inject constructor(
